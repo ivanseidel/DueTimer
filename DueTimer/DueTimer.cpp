@@ -3,6 +3,7 @@
   For instructions, go to https://github.com/ivanseidel/DueTimer
 
   Created by Ivan Seidel Gomes, March, 2013.
+  Thanks to stimmer (from Arduino forum), for coding the "timer soul" (Register stuff)
   Released into the public domain.
 */
 
