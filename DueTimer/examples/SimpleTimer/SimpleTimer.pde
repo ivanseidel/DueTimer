@@ -6,7 +6,7 @@ bool ledOn = false;
 void myHandler(){
 	ledOn = !ledOn;
 
-	digitalWrite(myLed, ledOn) // Led on, off, on, off...
+	digitalWrite(myLed, ledOn); // Led on, off, on, off...
 }
 
 void setup(){
