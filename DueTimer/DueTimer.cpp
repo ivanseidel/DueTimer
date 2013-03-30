@@ -1,5 +1,6 @@
 /*
   DueTimer.cpp - Implementation of Timers defined on DueTimer.h
+  For instructions, go to https://github.com/ivanseidel/DueTimer
 
   Created by Ivan Seidel Gomes, March, 2013.
   Released into the public domain.
@@ -49,10 +50,10 @@ DueTimer DueTimer::attachInterrupt(void (*isr)()){
 }
 
 // Start the timer
-// If a frequency is set, then sets the frequency and start the timer
-DueTimer DueTimer::start(long frequency){
-	if(frequency > 0)
-		setFrequency(frequency);
+// If a period is set, then sets the period and start the timer
+DueTimer DueTimer::start(long microseconds){
+	if(microseconds > 0)
+		setPeriod(microseconds);
 	
     NVIC_EnableIRQ(Timers[timer].irq);
 	return *this;

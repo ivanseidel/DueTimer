@@ -1,3 +1,11 @@
+/*
+  DueTimer.h - DueTimer header file, definition of methods and attributes...
+  For instructions, go to https://github.com/ivanseidel/DueTimer
+
+  Created by Ivan Seidel Gomes, March, 2013.
+  Released into the public domain.
+*/
+
 #ifndef DueTimer_h
 #define DueTimer_h
 
@@ -8,6 +16,9 @@
 
 class DueTimer
 {
+protected:
+	int timer; // Stores the object timer id (to acces Timers struct array)
+	
 public:
 	struct Timer
 	{
@@ -18,11 +29,10 @@ public:
 
 	static const Timer Timers[6];
 	static void (*callbacks[6])();
-	int timer; // Stores the object timer id (to acces Timers struct array)
 
 	DueTimer(int _timer);
 	DueTimer attachInterrupt(void (*isr)());
-	DueTimer start(long frequency = -1);
+	DueTimer start(long microseconds = -1);
 	DueTimer stop();
 	DueTimer setFrequency(long frequency);
 	DueTimer setPeriod(long microseconds);
