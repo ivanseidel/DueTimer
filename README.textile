@@ -29,6 +29,7 @@ There are 6 Timer objects already instantied for you:
 NOTE: Preffer to use @Timer3@, @Timer4@ and @Timer5@ since they have no connection to hardware pins.
 
 h3. TIPs
+
 pre. Timer4.attatchInterrupt(handler).setFrequency(10).start();
 is the same as:
 Timer4.attatchInterrupt(handler);
@@ -67,4 +68,4 @@ h3. You don't need to know:
 
 h2. Version History
 
-* 1.0 (2013-30-03): Original release@.
+* @1.0 (2013-30-03): Original release@.
