@@ -28,6 +28,18 @@ There are 6 Timer objects already instantied for you:
 
 NOTE: Preffer to use @Timer3@, @Timer4@ and @Timer5@ since they have no connection to hardware pins.
 
+h3. TIPs
+pre. Timer4.attatchInterrupt(handler).setFrequency(10).start();
+is the same as:
+Timer4.attatchInterrupt(handler);
+Timer4.setFrequency(10);
+Timer4.start();
+
+pre. To create a custom timer, refer to:
+DueTimer myTimer = DueTimer(0); // Creates a Timer 0 object.
+DueTimer myTimer = DueTimer(3); // Creates a Timer 3 object.
+Note: Maximum allowed is 5, otherwise it won't work...
+
 h2. Library Reference
 
 h3. You should know:
