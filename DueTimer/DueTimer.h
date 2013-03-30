@@ -11,14 +11,13 @@
 
 #include "Arduino.h"
 
-#include <stdlib.h>
 #include <inttypes.h>
 
 class DueTimer
 {
 protected:
 	int timer; // Stores the object timer id (to acces Timers struct array)
-	
+
 public:
 	struct Timer
 	{
