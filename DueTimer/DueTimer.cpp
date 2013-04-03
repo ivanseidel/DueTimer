@@ -9,18 +9,19 @@
 
 #include "DueTimer.h"
 
-const DueTimer::Timer DueTimer::Timers[6] = {
+const DueTimer::Timer DueTimer::Timers[9] = {
 	{TC0,0,TC0_IRQn},
 	{TC0,1,TC1_IRQn},
 	{TC0,2,TC2_IRQn},
 	{TC1,0,TC3_IRQn},
 	{TC1,1,TC4_IRQn},
-	{TC1,2,TC5_IRQn}
+	{TC1,2,TC5_IRQn},
+	{TC2,0,TC6_IRQn},
+	{TC2,1,TC7_IRQn},
+	{TC2,2,TC8_IRQn},
 };
 
-void (*DueTimer::callbacks[6])() = {
-	NULL, NULL, NULL, NULL, NULL, NULL
-};
+void (*DueTimer::callbacks[9])() = {};
 
 /*
 	Initialize all timers, so you can use it like: Timer0.start();
@@ -31,6 +32,9 @@ DueTimer Timer2(2);
 DueTimer Timer3(3);
 DueTimer Timer4(4);
 DueTimer Timer5(5);
+DueTimer Timer6(6);
+DueTimer Timer7(7);
+DueTimer Timer8(8);
 
 // Constructor
 DueTimer::DueTimer(int _timer){
@@ -112,4 +116,16 @@ void TC4_Handler(){
 void TC5_Handler(){
 	TC_GetStatus(TC1, 2);
 	DueTimer::callbacks[5]();
+}
+void TC6_Handler(){
+	TC_GetStatus(TC2, 0);
+	DueTimer::callbacks[6]();
+}
+void TC7_Handler(){
+	TC_GetStatus(TC2, 1);
+	DueTimer::callbacks[7]();
+}
+void TC8_Handler(){
+	TC_GetStatus(TC2, 2);
+	DueTimer::callbacks[8]();
 }

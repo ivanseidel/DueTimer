@@ -16,7 +16,7 @@
 class DueTimer
 {
 protected:
-	int timer; // Stores the object timer id (to acces Timers struct array)
+	int timer; // Stores the object timer id (to access Timer struct array)
 
 public:
 	struct Timer
@@ -26,8 +26,8 @@ public:
 		IRQn_Type irq;
 	};
 
-	static const Timer Timers[6];
-	static void (*callbacks[6])();
+	static const Timer Timers[9];
+	static void (*callbacks[9])();
 
 	DueTimer(int _timer);
 	DueTimer attachInterrupt(void (*isr)());
@@ -43,5 +43,8 @@ extern DueTimer Timer2;
 extern DueTimer Timer3;
 extern DueTimer Timer4;
 extern DueTimer Timer5;
+extern DueTimer Timer6;
+extern DueTimer Timer7;
+extern DueTimer Timer8;
 
 #endif
