@@ -11,7 +11,7 @@ pre. Timer3.attachInterrupt(handler).start(1000);
 or:
 Timer3.attachInterrupt(handler).setPeriod(1000).start();
 
-To call a function @handler@ 10 times a second:
+To call a function @handler@ @10@ times a second:
 
 pre. Timer3.attachInterrupt(handler).setFrequency(10).start();
 
@@ -26,7 +26,7 @@ pre. Timer3.start();
 There are @9@ Timer objects already instantied for you:
 @Timer0@, @Timer1@, @Timer2@, @Timer3@, @Timer4@, @Timer5@, @Timer6@, @Timer7@ and @Timer8@.
 
-h3. TIPs
+h3. TIPs and Warnings
 
 * Prefer to use @Timer3@, @Timer4@ and @Timer5@ since they have no connection to hardware pins.
 
@@ -40,7 +40,7 @@ pre. // To create a custom timer, refer to:
 DueTimer myTimer = DueTimer(0); // Creates a Timer 0 object.
 DueTimer myTimer = DueTimer(3); // Creates a Timer 3 object.
 DueTimer myTimer = DueTimer(t); // Creates a Timer t object.
-// Note: Maximum @t@ allowed is 8, as there is only 9 timers [0..8];
+// Note: Maximum t allowed is 8, as there is only 9 timers [0..8];
 
 pre. Timer1.setHandler(handler1).start(10);
 Timer1.setHandler(handler2).start(10);
@@ -75,6 +75,7 @@ h3. You don't need to know:
 
 h2. Version History
 
-* @1.0 (2013-30-03): Original release@.
+* @1.1 (2013-30-03): Added Timer6, Timer7, Timer8 (TC2).@
+* @1.0 (2013-30-03): Original release.@
 
 !https://d2weczhvl823v0.cloudfront.net/ivanseidel/DueTimer/trend.png(DueTimer)!
