@@ -1,22 +1,22 @@
 #include <DueTimer.h>
 
 void firstHandler(){
-	Serial.println(" - : First Handler!");
+	Serial.println("[-  ] First Handler!");
 }
 
 void secondHandler(){
-	Serial.println("-  : Second Handler!");
+	Serial.println("[ - ] Second Handler!");
 }
 
 void thirdHandler(){
-	Serial.println("  -: Third Handler!");
+	Serial.println("[  -] Third Handler!");
 }
 
 void setup(){
 	Serial.begin(9600);
 
-	Timer3.attachInterrupt(firstHandler).start(200000); // Every 200ms
-	Timer4.attachInterrupt(secondHandler).setFrequency(2).start();
+	Timer3.attachInterrupt(firstHandler).start(500000); // Every 500ms
+	Timer4.attachInterrupt(secondHandler).setFrequency(1).start();
 	Timer5.attachInterrupt(thirdHandler).setFrequency(10);
 }
 
