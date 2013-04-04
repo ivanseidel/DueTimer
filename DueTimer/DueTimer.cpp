@@ -39,6 +39,12 @@ DueTimer Timer8(8);
 // Constructor
 DueTimer::DueTimer(int _timer){
 	timer = _timer;
+
+	// Initialize timer
+	Timer t = Timers[timer];
+	pmc_set_writeprotect(false);
+	pmc_enable_periph_clk((uint32_t)Timers[timer].irq);
+    TC_Configure(t.tc, t.channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | TC_CMR_TCCLKS_TIMER_CLOCK4);
 }
 
 
@@ -53,7 +59,7 @@ DueTimer DueTimer::attachInterrupt(void (*isr)()){
 DueTimer DueTimer::start(long microseconds){
 	if(microseconds > 0)
 		setPeriod(microseconds);
-	
+
     NVIC_EnableIRQ(Timers[timer].irq);
 	return *this;
 }
@@ -64,56 +70,10 @@ DueTimer DueTimer::stop(){
 	return *this;
 }
 
-// Pick the best Clock
-uint8_t bestClock(long frequency, uint32_t& retRC){
-	/*
-	    Timer		Definition
-	    TIMER_CLOCK1	MCK/2
-	    TIMER_CLOCK2	MCK/8
-	    TIMER_CLOCK3	MCK/32
-	    TIMER_CLOCK4	MCK/128
-	*/
-	struct {
-		uint8_t flag;
-		uint8_t divisor;
-	} clockConfig[] = {
-		{ TC_CMR_TCCLKS_TIMER_CLOCK1, 2 },
-		{ TC_CMR_TCCLKS_TIMER_CLOCK2, 8 },
-		{ TC_CMR_TCCLKS_TIMER_CLOCK3, 32 },
-		{ TC_CMR_TCCLKS_TIMER_CLOCK4, 128 }
-	};
-	float ticks;
-	float error;
-	int clkId = 3;
-	int bestClock = 3;
-	float bestError = 1.0;
-	do 
-	{
-		ticks = (float) VARIANT_MCK / (float) frequency / (float) clockConfig[clkId].divisor;
-		error = abs(ticks - round(ticks));
-		if (abs(error) < bestError) 
-		{
-			bestClock = clkId;
-			bestError = error;
-		}
-	} while (clkId-- > 0);
-	ticks = (float) VARIANT_MCK / (float) frequency / (float) clockConfig[bestClock].divisor;
-	retRC = (uint32_t) round(ticks);
-	return clockConfig[bestClock].flag;
-}
-
-
 // Set the frequency (in Hz)
 DueTimer DueTimer::setFrequency(long frequency){
 	Timer t = Timers[timer];
-	uint32_t rc = 0;
-	uint8_t clock;
-	
-	pmc_set_writeprotect(false);
-	pmc_enable_periph_clk((uint32_t)Timers[timer].irq);
-	clock = bestClock(frequency, rc);
-    TC_Configure(t.tc, t.channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | clock);
-    
+    uint32_t rc = VARIANT_MCK/128/frequency; //128 because we selected TIMER_CLOCK4 above
     TC_SetRA(t.tc, t.channel, rc/2); //50% high, 50% low
     TC_SetRC(t.tc, t.channel, rc);
     TC_Start(t.tc, t.channel);
