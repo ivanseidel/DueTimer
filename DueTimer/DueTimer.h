@@ -59,4 +59,6 @@ extern DueTimer Timer7;
 extern DueTimer Timer8;
 
 #endif
+#else
+	#pragma message("Ops! Trying to include DueTimer on another device?")
 #endif
