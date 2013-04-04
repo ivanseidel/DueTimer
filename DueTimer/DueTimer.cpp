@@ -22,6 +22,7 @@ const DueTimer::Timer DueTimer::Timers[9] = {
 };
 
 void (*DueTimer::callbacks[9])() = {};
+int DueTimer::frequency[9] = {0,0,0,0,0,0,0,0,0};
 
 /*
 	Initialize all timers, so you can use it like: Timer0.start();
@@ -44,7 +45,6 @@ DueTimer::DueTimer(int _timer){
 	Timer t = Timers[timer];
 	pmc_set_writeprotect(false);
 	pmc_enable_periph_clk((uint32_t)Timers[timer].irq);
-    TC_Configure(t.tc, t.channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | TC_CMR_TCCLKS_TIMER_CLOCK4);
 }
 
 
@@ -61,31 +61,47 @@ DueTimer DueTimer::start(long microseconds){
 		setPeriod(microseconds);
 	
     NVIC_EnableIRQ(Timers[timer].irq);
+	
 	return *this;
 }
 
 // Stop the timer
 DueTimer DueTimer::stop(){
 	NVIC_DisableIRQ(Timers[timer].irq);
+	
 	return *this;
 }
 
 // Set the frequency (in Hz)
 DueTimer DueTimer::setFrequency(long frequency){
 	Timer t = Timers[timer];
+
+	TC_Configure(t.tc, t.channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | TC_CMR_TCCLKS_TIMER_CLOCK4);
     uint32_t rc = VARIANT_MCK/128/frequency; //128 because we selected TIMER_CLOCK4 above
     TC_SetRA(t.tc, t.channel, rc/2); //50% high, 50% low
     TC_SetRC(t.tc, t.channel, rc);
     TC_Start(t.tc, t.channel);
     t.tc->TC_CHANNEL[t.channel].TC_IER=TC_IER_CPCS;
     t.tc->TC_CHANNEL[t.channel].TC_IDR=~TC_IER_CPCS;
+
 	return *this;
 }
 
 // Set the period of the timer (in microseconds)
 DueTimer DueTimer::setPeriod(long microseconds){
 	setFrequency(1000000/microseconds); // Convert from period in microseconds to frequency
+	
 	return *this;
+}
+
+// Get current time frequency
+long DueTimer::getFrequency(){
+	return frequency[timer];
+}
+
+// Get current time period
+long DueTimer::getPeriod(){
+	return 1.0/getFrequency()*100000;
 }
 
 

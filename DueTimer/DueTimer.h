@@ -17,6 +17,9 @@ class DueTimer
 {
 protected:
 	int timer; // Stores the object timer id (to access Timer struct array)
+	int frequency[9]; // Stores the object timer frequency (to access know current timer period, frequency...)
+
+	void savePeriod(long period); // Saves the period
 
 public:
 	struct Timer
@@ -35,6 +38,9 @@ public:
 	DueTimer stop();
 	DueTimer setFrequency(long frequency);
 	DueTimer setPeriod(long microseconds);
+
+	long getFrequency();
+	long getPeriod();
 };
 
 extern DueTimer Timer0;
