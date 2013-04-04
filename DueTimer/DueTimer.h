@@ -6,6 +6,8 @@
   Released into the public domain.
 */
 
+#ifdef __arm__
+
 #ifndef DueTimer_h
 #define DueTimer_h
 
@@ -17,6 +19,7 @@ class DueTimer
 {
 protected:
 	int timer; // Stores the object timer id (to access Timer struct array)
+	DueTimer uint8_t pickClock(uint32_t frequency, uint32_t& retRC);
 
 public:
 	struct Timer
@@ -47,4 +50,5 @@ extern DueTimer Timer6;
 extern DueTimer Timer7;
 extern DueTimer Timer8;
 
+#endif
 #endif
