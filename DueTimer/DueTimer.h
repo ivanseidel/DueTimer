@@ -19,7 +19,7 @@ class DueTimer
 {
 protected:
 	int timer; // Stores the object timer id (to access Timer struct array)
-	DueTimer uint8_t pickClock(uint32_t frequency, uint32_t& retRC);
+	DueTimer uint8_t bestClock(long frequency, uint32_t& retRC);
 
 public:
 	struct Timer
