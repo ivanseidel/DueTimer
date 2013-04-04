@@ -19,13 +19,12 @@ class DueTimer
 {
 protected:
 	int timer; // Stores the object timer id (to access Timer struct array)
-<<<<<<< HEAD
 	int frequency[9]; // Stores the object timer frequency (to access know current timer period, frequency...)
 
 	void savePeriod(long period); // Saves the period
-=======
+
 	DueTimer uint8_t pickClock(uint32_t frequency, uint32_t& retRC);
->>>>>>> a4f4e66a5e0cd7d6b1a9e5570681725537ea49f2
+
 
 public:
 	struct Timer
