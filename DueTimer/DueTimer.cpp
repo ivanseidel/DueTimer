@@ -27,6 +27,8 @@ int DueTimer::_frequency[9] = {1,1,1,1,1,1,1,1,1};
 /*
 	Initialize all timers, so you can use it like: Timer0.start();
 */
+DueTimer Timer(0);
+
 DueTimer Timer0(0);
 DueTimer Timer1(1);
 DueTimer Timer2(2);
@@ -45,11 +47,20 @@ DueTimer::DueTimer(int _timer){
 	setFrequency(_frequency[_timer]);
 }
 
+// Get the first timer without any callbacks
+DueTimer DueTimer::getAvaliable(){
+	for(int i = 0; i < 9; i++){
+		if(!callbacks[i])
+			return Timer(i);
+	}
+	// Default, return Timer0;
+	return Timer(0);
+}
 
 // Links the function passed as argument to the timer of the object
 DueTimer DueTimer::attachInterrupt(void (*isr)()){
 	callbacks[timer] = isr;
-	
+
 	return *this;
 }
 

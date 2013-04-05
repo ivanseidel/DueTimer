@@ -30,6 +30,8 @@ public:
 		uint32_t channel;
 		IRQn_Type irq;
 	};
+	
+	static DueTimer getAvaliable();
 
 	static const Timer Timers[9]; // Store timer configuration (static, as it's fix for every object)
 	static void (*callbacks[9])(); // Needs to be public, because the handlers are outside class
@@ -41,9 +43,12 @@ public:
 	DueTimer setFrequency(long frequency);
 	DueTimer setPeriod(long microseconds);
 
+
 	long getFrequency();
 	long getPeriod();
 };
+
+extern DueTimer Timer; // Just to call Timer.getAvaliable instead of Timer::getAvaliable()
 
 extern DueTimer Timer0;
 extern DueTimer Timer1;
