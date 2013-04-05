@@ -22,10 +22,13 @@ const DueTimer::Timer DueTimer::Timers[9] = {
 };
 
 void (*DueTimer::callbacks[9])() = {};
+int DueTimer::_frequency[9] = {1,1,1,1,1,1,1,1,1};
 
 /*
 	Initialize all timers, so you can use it like: Timer0.start();
 */
+DueTimer Timer(0);
+
 DueTimer Timer0(0);
 DueTimer Timer1(1);
 DueTimer Timer2(2);
@@ -40,17 +43,34 @@ DueTimer Timer8(8);
 DueTimer::DueTimer(int _timer){
 	timer = _timer;
 
-	// Initialize timer
-	Timer t = Timers[timer];
-	pmc_set_writeprotect(false);
-	pmc_enable_periph_clk((uint32_t)Timers[timer].irq);
-    TC_Configure(t.tc, t.channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | TC_CMR_TCCLKS_TIMER_CLOCK4);
+	// Initialize Default frequency
+	setFrequency(_frequency[_timer]);
 }
 
+// Get the first timer without any callbacks
+DueTimer DueTimer::getAvaliable(){
+	for(int i = 0; i < 9; i++){
+		if(!callbacks[i])
+			return DueTimer(i);
+	}
+	// Default, return Timer0;
+	return DueTimer(0);
+}
 
 // Links the function passed as argument to the timer of the object
 DueTimer DueTimer::attachInterrupt(void (*isr)()){
 	callbacks[timer] = isr;
+
+	return *this;
+}
+
+// Links the function passed as argument to the timer of the object
+DueTimer DueTimer::detachInterrupt(){
+	// Stop running timer
+	stop();
+
+	callbacks[timer] = NULL;
+
 	return *this;
 }
 
@@ -61,31 +81,103 @@ DueTimer DueTimer::start(long microseconds){
 		setPeriod(microseconds);
 
     NVIC_EnableIRQ(Timers[timer].irq);
+	
 	return *this;
 }
 
 // Stop the timer
 DueTimer DueTimer::stop(){
 	NVIC_DisableIRQ(Timers[timer].irq);
+	
 	return *this;
 }
 
+// Pick the best Clock
+// It uses Black magic to do this, thanks to Ogle Basil Hall!
+uint8_t DueTimer::bestClock(uint32_t frequency, uint32_t& retRC){
+	/*
+	    Timer		Definition
+	    TIMER_CLOCK1	MCK/2
+	    TIMER_CLOCK2	MCK/8
+	    TIMER_CLOCK3	MCK/32
+	    TIMER_CLOCK4	MCK/128
+	*/
+	struct {
+		uint8_t flag;
+		uint8_t divisor;
+	} clockConfig[] = {
+		{ TC_CMR_TCCLKS_TIMER_CLOCK1, 2 },
+		{ TC_CMR_TCCLKS_TIMER_CLOCK2, 8 },
+		{ TC_CMR_TCCLKS_TIMER_CLOCK3, 32 },
+		{ TC_CMR_TCCLKS_TIMER_CLOCK4, 128 }
+	};
+	float ticks;
+	float error;
+	int clkId = 3;
+	int bestClock = 3;
+	float bestError = 1.0;
+	do 
+	{
+		ticks = (float) VARIANT_MCK / (float) frequency / (float) clockConfig[clkId].divisor;
+		error = abs(ticks - round(ticks));
+		if (abs(error) < bestError) 
+		{
+			bestClock = clkId;
+			bestError = error;
+		}
+	} while (clkId-- > 0);
+	ticks = (float) VARIANT_MCK / (float) frequency / (float) clockConfig[bestClock].divisor;
+	retRC = (uint32_t) round(ticks);
+	return clockConfig[bestClock].flag;
+}
+
+
 // Set the frequency (in Hz)
 DueTimer DueTimer::setFrequency(long frequency){
+	// Saves current frequency
+	_frequency[timer] = frequency;
+
+	// Get current timer configurations
 	Timer t = Timers[timer];
-    uint32_t rc = VARIANT_MCK/128/frequency; //128 because we selected TIMER_CLOCK4 above
+
+	uint32_t rc = 0;
+	uint8_t clock;
+
+	// Yes, we don't want pmc protected!
+	pmc_set_writeprotect(false);
+
+	// Enable clock for the timer
+	pmc_enable_periph_clk((uint32_t)Timers[timer].irq);
+
+	// Do magic, and find's best clock
+	clock = bestClock(frequency, rc);
+    TC_Configure(t.tc, t.channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | clock);
+    
+    // Pwm stuff
     TC_SetRA(t.tc, t.channel, rc/2); //50% high, 50% low
     TC_SetRC(t.tc, t.channel, rc);
     TC_Start(t.tc, t.channel);
     t.tc->TC_CHANNEL[t.channel].TC_IER=TC_IER_CPCS;
     t.tc->TC_CHANNEL[t.channel].TC_IDR=~TC_IER_CPCS;
+
 	return *this;
 }
 
 // Set the period of the timer (in microseconds)
 DueTimer DueTimer::setPeriod(long microseconds){
-	setFrequency(1000000/microseconds); // Convert from period in microseconds to frequency
+	setFrequency(1000000/microseconds); // Convert from period in microseconds to frequency in Hz
+	
 	return *this;
+}
+
+// Get current time frequency
+long DueTimer::getFrequency(){
+	return _frequency[timer];
+}
+
+// Get current time period
+long DueTimer::getPeriod(){
+	return 1.0/getFrequency()*1000000;
 }
 
 
