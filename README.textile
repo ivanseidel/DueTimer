@@ -8,8 +8,10 @@ h2. Getting Started
 To call a function @handler@ every @1000@ microseconds:
 
 pre. Timer3.attachInterrupt(handler).start(1000);
-or:
+// or:
 Timer3.attachInterrupt(handler).setPeriod(1000).start();
+// or, to select witchever avaliable timer:
+Timer.getAvaliable().attachInterrupt(handler).start(1000);
 
 To call a function @handler@ @10@ times a second:
 
@@ -48,11 +50,21 @@ DueTimer myTimer = DueTimer(1);
 myTimer.setHandler(handler3).start(20);
 // Will run only handle3, on Timer 1 (You are just overriding the callback)
 
+pre. Timer.getAvaliable().attachInterrupt(callback1).start(10);
+// Start timer on first avaliable timer
+DueTimer::getAvaliable().attachInterrupt(callback2).start(10);
+// Start timer on seccond avaliable timer
+// And so on...
+
 h2. Library Reference
 
 h3. You should know:
 
+- @getAvaliable()@ := Get the first avaliable Timer.
+
 - @attachInterrupt(void (*isr)())@ := Attach a interrupt (callback function) for the timer of the object.
+
+- @detachInterrupt()@ := Detach current callback of timer.
 
 - @start(long microseconds = -1)@ := Start the timer with an optional period parameter.
 
@@ -60,7 +72,11 @@ h3. You should know:
 
 - @setFrequency(long frequency)@ := Set the timer frequency
 
+- @long getFrequency()@ := Get the timer frequency
+
 - @setPeriod(long microseconds)@ := Set the timer period (in microseconds)
+
+- @long getPeriod()@ := Get the timer period (in microseconds)
 
 h3. You don't need to know:
 
@@ -75,6 +91,7 @@ h3. You don't need to know:
 
 h2. Version History
 
+* @1.2 (2013-30-03): Clock selection. Getters. getAvaliable(). "AvaliableTimer" Example.@
 * @1.1 (2013-30-03): Added Timer6, Timer7, Timer8 (TC2).@
 * @1.0 (2013-30-03): Original release.@
 
