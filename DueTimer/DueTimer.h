@@ -30,7 +30,7 @@ public:
 		uint32_t channel;
 		IRQn_Type irq;
 	};
-	
+
 	static DueTimer getAvaliable();
 
 	static const Timer Timers[9]; // Store timer configuration (static, as it's fix for every object)
@@ -38,6 +38,7 @@ public:
 
 	DueTimer(int _timer);
 	DueTimer attachInterrupt(void (*isr)());
+	DueTimer detachInterrupt();
 	DueTimer start(long microseconds = -1);
 	DueTimer stop();
 	DueTimer setFrequency(long frequency);

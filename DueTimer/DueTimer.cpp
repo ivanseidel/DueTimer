@@ -51,15 +51,25 @@ DueTimer::DueTimer(int _timer){
 DueTimer DueTimer::getAvaliable(){
 	for(int i = 0; i < 9; i++){
 		if(!callbacks[i])
-			return Timer(i);
+			return DueTimer(i);
 	}
 	// Default, return Timer0;
-	return Timer(0);
+	return DueTimer(0);
 }
 
 // Links the function passed as argument to the timer of the object
 DueTimer DueTimer::attachInterrupt(void (*isr)()){
 	callbacks[timer] = isr;
+
+	return *this;
+}
+
+// Links the function passed as argument to the timer of the object
+DueTimer DueTimer::detachInterrupt(){
+	// Stop running timer
+	stop();
+
+	callbacks[timer] = NULL;
 
 	return *this;
 }
