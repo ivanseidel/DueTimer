@@ -31,7 +31,7 @@ public:
 		IRQn_Type irq;
 	};
 
-	static DueTimer getAvaliable();
+	static DueTimer getAvailable();
 
 	static const Timer Timers[9]; // Store timer configuration (static, as it's fix for every object)
 	static void (*callbacks[9])(); // Needs to be public, because the handlers are outside class
@@ -49,7 +49,7 @@ public:
 	long getPeriod();
 };
 
-extern DueTimer Timer; // Just to call Timer.getAvaliable instead of Timer::getAvaliable()
+extern DueTimer Timer; // Just to call Timer.getAvailable instead of Timer::getAvailable()
 
 extern DueTimer Timer0;
 extern DueTimer Timer1;
