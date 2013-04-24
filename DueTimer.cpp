@@ -48,7 +48,7 @@ DueTimer::DueTimer(int _timer){
 }
 
 // Get the first timer without any callbacks
-DueTimer DueTimer::getAvaliable(){
+DueTimer DueTimer::getAvailable(){
 	for(int i = 0; i < 9; i++){
 		if(!callbacks[i])
 			return DueTimer(i);
@@ -81,14 +81,14 @@ DueTimer DueTimer::start(long microseconds){
 		setPeriod(microseconds);
 
     NVIC_EnableIRQ(Timers[timer].irq);
-	
+
 	return *this;
 }
 
 // Stop the timer
 DueTimer DueTimer::stop(){
 	NVIC_DisableIRQ(Timers[timer].irq);
-	
+
 	return *this;
 }
 
@@ -116,11 +116,11 @@ uint8_t DueTimer::bestClock(uint32_t frequency, uint32_t& retRC){
 	int clkId = 3;
 	int bestClock = 3;
 	float bestError = 1.0;
-	do 
+	do
 	{
 		ticks = (float) VARIANT_MCK / (float) frequency / (float) clockConfig[clkId].divisor;
 		error = abs(ticks - round(ticks));
-		if (abs(error) < bestError) 
+		if (abs(error) < bestError)
 		{
 			bestClock = clkId;
 			bestError = error;
@@ -152,7 +152,7 @@ DueTimer DueTimer::setFrequency(long frequency){
 	// Do magic, and find's best clock
 	clock = bestClock(frequency, rc);
     TC_Configure(t.tc, t.channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | clock);
-    
+
     // Pwm stuff
     TC_SetRA(t.tc, t.channel, rc/2); //50% high, 50% low
     TC_SetRC(t.tc, t.channel, rc);
@@ -166,7 +166,7 @@ DueTimer DueTimer::setFrequency(long frequency){
 // Set the period of the timer (in microseconds)
 DueTimer DueTimer::setPeriod(long microseconds){
 	setFrequency(1000000/microseconds); // Convert from period in microseconds to frequency in Hz
-	
+
 	return *this;
 }
 
