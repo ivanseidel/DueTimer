@@ -42,15 +42,15 @@ void goToSleep(){
 void setup(){
 	Serial.begin(9600);
 
-	Timer.getAvaliable().attachInterrupt(playVideogame).start(); delay(50);
-	Timer.getAvaliable().attachInterrupt(drinkWater).start(); delay(50);
-	Timer.getAvaliable().attachInterrupt(makeSushi).start(); delay(50);
-	Timer.getAvaliable().attachInterrupt(singOnShower).start(); delay(50);
-	Timer.getAvaliable().attachInterrupt(studyMath).start(); delay(50);
-	Timer.getAvaliable().attachInterrupt(watchStarTrek).start(); delay(50);
-	Timer.getAvaliable().attachInterrupt(eatSushi).start(); delay(50);
-	Timer.getAvaliable().attachInterrupt(readTextMessage).start(); delay(50);
-	Timer.getAvaliable().attachInterrupt(goToSleep).start(); delay(50);
+	Timer.getAvailable().attachInterrupt(playVideogame).start(); delay(50);
+	Timer.getAvailable().attachInterrupt(drinkWater).start(); delay(50);
+	Timer.getAvailable().attachInterrupt(makeSushi).start(); delay(50);
+	Timer.getAvailable().attachInterrupt(singOnShower).start(); delay(50);
+	Timer.getAvailable().attachInterrupt(studyMath).start(); delay(50);
+	Timer.getAvailable().attachInterrupt(watchStarTrek).start(); delay(50);
+	Timer.getAvailable().attachInterrupt(eatSushi).start(); delay(50);
+	Timer.getAvailable().attachInterrupt(readTextMessage).start(); delay(50);
+	Timer.getAvailable().attachInterrupt(goToSleep).start(); delay(50);
 }
 
 void loop(){
