@@ -2,6 +2,11 @@ h1. DueTimer
 
 Timer Library to work with Arduino DUE
 
+h2. Instalation
+
+1. "Download":https://github.com/ivanseidel/DueTimer/archive/master.zip the Master branch from gitHub.
+2. Unzip and modify the Folder name to "DueTimer" (Remove the '-master')
+3. Paste the modified folder on your Library folder (On your @Libraries@ folder inside Sketchbooks or Arduino software).
 
 h2. Getting Started
 
@@ -10,7 +15,7 @@ To call a function @handler@ every @1000@ microseconds:
 pre. Timer3.attachInterrupt(handler).start(1000);
 // or:
 Timer3.attachInterrupt(handler).setPeriod(1000).start();
-// or, to select witchever avaliable timer:
+// or, to select witchever available timer:
 Timer.getAvailable().attachInterrupt(handler).start(1000);
 
 To call a function @handler@ @10@ times a second:
@@ -51,16 +56,16 @@ myTimer.setHandler(handler3).start(20);
 // Will run only handle3, on Timer 1 (You are just overriding the callback)
 
 pre. Timer.getAvailable().attachInterrupt(callback1).start(10);
-// Start timer on first avaliable timer
+// Start timer on first available timer
 DueTimer::getAvailable().attachInterrupt(callback2).start(10);
-// Start timer on seccond avaliable timer
+// Start timer on seccond available timer
 // And so on...
 
 h2. Library Reference
 
 h3. You should know:
 
-- @getAvailable()@ := Get the first avaliable Timer.
+- @getAvailable()@ := Get the first available Timer.
 
 - @attachInterrupt(void (*isr)())@ := Attach a interrupt (callback function) for the timer of the object.
 
@@ -91,7 +96,7 @@ h3. You don't need to know:
 
 h2. Version History
 
-* @1.2 (2013-30-03): Clock selection. Getters. getAvailable(). "AvaliableTimer" Example.@
+* @1.2 (2013-30-03): Clock selection. Getters. getAvailable(). "AvailableTimer" Example.@
 * @1.1 (2013-30-03): Added Timer6, Timer7, Timer8 (TC2).@
 * @1.0 (2013-30-03): Original release.@
 
