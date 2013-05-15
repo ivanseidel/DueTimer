@@ -8,7 +8,6 @@
 */
 
 #include "DueTimer.h"
-#include <Arduino.h>
 
 const DueTimer::Timer DueTimer::Timers[9] = {
 	{TC0,0,TC0_IRQn},
@@ -135,6 +134,9 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 
 // Set the frequency (in Hz)
 DueTimer DueTimer::setFrequency(double frequency){
+	//prevent negative frequencies
+	if(frequency < 0) { frequency = 1; }
+
 	// Saves current frequency
 	_frequency[timer] = frequency;
 
@@ -166,10 +168,8 @@ DueTimer DueTimer::setFrequency(double frequency){
 
 // Set the period of the timer (in microseconds)
 DueTimer DueTimer::setPeriod(long microseconds){
-	double frequency = 1000000.0 / microseconds;
+	double frequency = 1000000.0 / microseconds;	
 	setFrequency(frequency); // Convert from period in microseconds to frequency in Hz
-	Serial.print("setPeriod: ");
-	Serial.println(frequency);
 	return *this;
 }
 
