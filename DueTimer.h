@@ -19,9 +19,9 @@ class DueTimer
 {
 protected:
 	int timer; // Stores the object timer id (to access Timer struct array)
-	static int _frequency[9]; // Stores the object timer frequency (to access know current timer period, frequency...)
+	static double _frequency[9]; // Stores the object timer frequency (to access know current timer period, frequency...)
 
-	static uint8_t bestClock(uint32_t frequency, uint32_t& retRC); // Picks the best clock to lower the error
+	static uint8_t bestClock(double frequency, uint32_t& retRC); // Picks the best clock to lower the error
 
 public:
 	struct Timer
@@ -41,11 +41,11 @@ public:
 	DueTimer detachInterrupt();
 	DueTimer start(long microseconds = -1);
 	DueTimer stop();
-	DueTimer setFrequency(long frequency);
+	DueTimer setFrequency(double frequency);
 	DueTimer setPeriod(long microseconds);
 
 
-	long getFrequency();
+	double getFrequency();
 	long getPeriod();
 };
 

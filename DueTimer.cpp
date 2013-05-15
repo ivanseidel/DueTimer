@@ -8,6 +8,7 @@
 */
 
 #include "DueTimer.h"
+#include <Arduino.h>
 
 const DueTimer::Timer DueTimer::Timers[9] = {
 	{TC0,0,TC0_IRQn},
@@ -22,7 +23,7 @@ const DueTimer::Timer DueTimer::Timers[9] = {
 };
 
 void (*DueTimer::callbacks[9])() = {};
-int DueTimer::_frequency[9] = {1,1,1,1,1,1,1,1,1};
+double DueTimer::_frequency[9] = {1,1,1,1,1,1,1,1,1};
 
 /*
 	Initialize all timers, so you can use it like: Timer0.start();
@@ -94,7 +95,7 @@ DueTimer DueTimer::stop(){
 
 // Pick the best Clock
 // It uses Black magic to do this, thanks to Ogle Basil Hall!
-uint8_t DueTimer::bestClock(uint32_t frequency, uint32_t& retRC){
+uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 	/*
 	    Timer		Definition
 	    TIMER_CLOCK1	MCK/2
@@ -118,7 +119,7 @@ uint8_t DueTimer::bestClock(uint32_t frequency, uint32_t& retRC){
 	float bestError = 1.0;
 	do
 	{
-		ticks = (float) VARIANT_MCK / (float) frequency / (float) clockConfig[clkId].divisor;
+		ticks = (float) VARIANT_MCK / frequency / (float) clockConfig[clkId].divisor;
 		error = abs(ticks - round(ticks));
 		if (abs(error) < bestError)
 		{
@@ -126,14 +127,14 @@ uint8_t DueTimer::bestClock(uint32_t frequency, uint32_t& retRC){
 			bestError = error;
 		}
 	} while (clkId-- > 0);
-	ticks = (float) VARIANT_MCK / (float) frequency / (float) clockConfig[bestClock].divisor;
+	ticks = (float) VARIANT_MCK / frequency / (float) clockConfig[bestClock].divisor;
 	retRC = (uint32_t) round(ticks);
 	return clockConfig[bestClock].flag;
 }
 
 
 // Set the frequency (in Hz)
-DueTimer DueTimer::setFrequency(long frequency){
+DueTimer DueTimer::setFrequency(double frequency){
 	// Saves current frequency
 	_frequency[timer] = frequency;
 
@@ -165,13 +166,15 @@ DueTimer DueTimer::setFrequency(long frequency){
 
 // Set the period of the timer (in microseconds)
 DueTimer DueTimer::setPeriod(long microseconds){
-	setFrequency(1000000/microseconds); // Convert from period in microseconds to frequency in Hz
-
+	double frequency = 1000000.0 / microseconds;
+	setFrequency(frequency); // Convert from period in microseconds to frequency in Hz
+	Serial.print("setPeriod: ");
+	Serial.println(frequency);
 	return *this;
 }
 
 // Get current time frequency
-long DueTimer::getFrequency(){
+double DueTimer::getFrequency(){
 	return _frequency[timer];
 }
 
