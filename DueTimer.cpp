@@ -79,7 +79,8 @@ DueTimer DueTimer::detachInterrupt(){
 DueTimer DueTimer::start(long microseconds){
 	if(microseconds > 0)
 		setPeriod(microseconds);
-
+	
+	NVIC_ClearPendingIRQ(Timers[timer].irq);
     NVIC_EnableIRQ(Timers[timer].irq);
 
 	return *this;
@@ -135,7 +136,7 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 // Set the frequency (in Hz)
 DueTimer DueTimer::setFrequency(double frequency){
 	//prevent negative frequencies
-	if(frequency < 0) { frequency = 1; }
+	if(frequency <= 0) { frequency = 1; }
 
 	// Saves current frequency
 	_frequency[timer] = frequency;
