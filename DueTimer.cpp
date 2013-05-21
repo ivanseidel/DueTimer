@@ -79,7 +79,8 @@ DueTimer DueTimer::detachInterrupt(){
 DueTimer DueTimer::start(long microseconds){
 	if(microseconds > 0)
 		setPeriod(microseconds);
-
+	
+	NVIC_ClearPendingIRQ(Timers[timer].irq);
     NVIC_EnableIRQ(Timers[timer].irq);
 
 	return *this;
