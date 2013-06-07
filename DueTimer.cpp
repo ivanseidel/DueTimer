@@ -3,6 +3,7 @@
   For instructions, go to https://github.com/ivanseidel/DueTimer
 
   Created by Ivan Seidel Gomes, March, 2013.
+  Modified by Philipp Klaus, June 2013.
   Thanks to stimmer (from Arduino forum), for coding the "timer soul" (Register stuff)
   Released into the public domain.
 */
@@ -25,7 +26,7 @@ void (*DueTimer::callbacks[9])() = {};
 double DueTimer::_frequency[9] = {1,1,1,1,1,1,1,1,1};
 
 /*
-	Initialize all timers, so you can use it like: Timer0.start();
+	Initializing all timers, so you can use them like this: Timer0.start();
 */
 DueTimer Timer(0);
 
@@ -39,16 +40,22 @@ DueTimer Timer6(6);
 DueTimer Timer7(7);
 DueTimer Timer8(8);
 
-// Constructor
 DueTimer::DueTimer(int _timer){
+	/*
+		The constructor of the class DueTimer 
+	*/
+
 	timer = _timer;
 
 	// Initialize Default frequency
 	setFrequency(_frequency[_timer]);
 }
 
-// Get the first timer without any callbacks
 DueTimer DueTimer::getAvailable(){
+	/*
+		Return the first timer with no callback set
+	*/
+
 	for(int i = 0; i < 9; i++){
 		if(!callbacks[i])
 			return DueTimer(i);
@@ -57,51 +64,62 @@ DueTimer DueTimer::getAvailable(){
 	return DueTimer(0);
 }
 
-// Links the function passed as argument to the timer of the object
 DueTimer DueTimer::attachInterrupt(void (*isr)()){
+	/*
+		Links the function passed as argument to the timer of the object
+	*/
+
 	callbacks[timer] = isr;
 
 	return *this;
 }
 
-// Links the function passed as argument to the timer of the object
 DueTimer DueTimer::detachInterrupt(){
-	// Stop running timer
-	stop();
+	/*
+		Links the function passed as argument to the timer of the object
+	*/
+
+	stop(); // Stop the currently running timer
 
 	callbacks[timer] = NULL;
 
 	return *this;
 }
 
-// Start the timer
-// If a period is set, then sets the period and start the timer
 DueTimer DueTimer::start(long microseconds){
+	/*
+		Start the timer
+		If a period is set, then sets the period and start the timer
+	*/
+
 	if(microseconds > 0)
 		setPeriod(microseconds);
 	
 	NVIC_ClearPendingIRQ(Timers[timer].irq);
-    NVIC_EnableIRQ(Timers[timer].irq);
+	NVIC_EnableIRQ(Timers[timer].irq);
 
 	return *this;
 }
 
-// Stop the timer
 DueTimer DueTimer::stop(){
+	/*
+		Stop the timer
+	*/
+
 	NVIC_DisableIRQ(Timers[timer].irq);
 
 	return *this;
 }
 
-// Pick the best Clock
-// It uses Black magic to do this, thanks to Ogle Basil Hall!
 uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 	/*
-	    Timer		Definition
-	    TIMER_CLOCK1	MCK/2
-	    TIMER_CLOCK2	MCK/8
-	    TIMER_CLOCK3	MCK/32
-	    TIMER_CLOCK4	MCK/128
+		Pick the best Clock, thanks to Ogle Basil Hall!
+
+		Timer		Definition
+		TIMER_CLOCK1	MCK/2
+		TIMER_CLOCK2	MCK/8
+		TIMER_CLOCK3	MCK/32
+		TIMER_CLOCK4	MCK/128
 	*/
 	struct {
 		uint8_t flag;
@@ -133,12 +151,15 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 }
 
 
-// Set the frequency (in Hz)
 DueTimer DueTimer::setFrequency(double frequency){
-	//prevent negative frequencies
+	/*
+		Set the timer frequency (in Hz)
+	*/
+
+	// Prevent negative frequencies
 	if(frequency <= 0) { frequency = 1; }
 
-	// Saves current frequency
+	// Remember the frequency
 	_frequency[timer] = frequency;
 
 	// Get current timer configurations
@@ -147,47 +168,66 @@ DueTimer DueTimer::setFrequency(double frequency){
 	uint32_t rc = 0;
 	uint8_t clock;
 
-	// Yes, we don't want pmc protected!
+	// Tell the Power Management Controller to disable 
+	// the write protection of the (Timer/Counter) registers:
 	pmc_set_writeprotect(false);
 
 	// Enable clock for the timer
 	pmc_enable_periph_clk((uint32_t)Timers[timer].irq);
 
-	// Do magic, and find's best clock
+	// Find the best clock for the wanted frequency
 	clock = bestClock(frequency, rc);
-    TC_Configure(t.tc, t.channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | clock);
 
-    // Pwm stuff
-    TC_SetRA(t.tc, t.channel, rc/2); //50% high, 50% low
-    TC_SetRC(t.tc, t.channel, rc);
-    TC_Start(t.tc, t.channel);
-    t.tc->TC_CHANNEL[t.channel].TC_IER=TC_IER_CPCS;
-    t.tc->TC_CHANNEL[t.channel].TC_IDR=~TC_IER_CPCS;
+	// Set up the Timer in waveform mode which creates a PWM
+	// in UP mode with automatic trigger on RC Compare
+	// and sets it up with the determined internal clock as clock input.
+	TC_Configure(t.tc, t.channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | clock);
+
+	// Set up the PWM-like waveform mode
+	TC_SetRA(t.tc, t.channel, rc/2); // 50% low, 50% high (doesn't matter)
+	// Reset counter and fire interrupt when RC value is matched:
+	TC_SetRC(t.tc, t.channel, rc);
+	// Start the Counter channel
+	TC_Start(t.tc, t.channel);
+	// Enable the RC Compare Interrupt...
+	t.tc->TC_CHANNEL[t.channel].TC_IER=TC_IER_CPCS;
+	// ... and disable all others.
+	t.tc->TC_CHANNEL[t.channel].TC_IDR=~TC_IER_CPCS;
 
 	return *this;
 }
 
-// Set the period of the timer (in microseconds)
 DueTimer DueTimer::setPeriod(long microseconds){
+	/*
+		Set the period of the timer (in microseconds)
+	*/
+
+	// Convert period in microseconds to frequency in Hz
 	double frequency = 1000000.0 / microseconds;	
-	setFrequency(frequency); // Convert from period in microseconds to frequency in Hz
+	setFrequency(frequency);
 	return *this;
 }
 
-// Get current time frequency
 double DueTimer::getFrequency(){
+	/*
+		Get current time frequency
+	*/
+
 	return _frequency[timer];
 }
 
-// Get current time period
 long DueTimer::getPeriod(){
+	/*
+		Get current time period
+	*/
+
 	return 1.0/getFrequency()*1000000;
 }
 
 
 /*
-	Default timers callbacks
-	DO NOT CHANGE!
+	Implementation of the timer callbacks defined in 
+	arduino-1.5.2/hardware/arduino/sam/system/CMSIS/Device/ATMEL/sam3xa/include/sam3x8e.h
 */
 void TC0_Handler(){
 	TC_GetStatus(TC0, 0);
