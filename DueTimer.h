@@ -3,6 +3,7 @@
   For instructions, go to https://github.com/ivanseidel/DueTimer
 
   Created by Ivan Seidel Gomes, March, 2013.
+  Modified by Philipp Klaus, June 2013.
   Released into the public domain.
 */
 
@@ -18,10 +19,16 @@
 class DueTimer
 {
 protected:
-	int timer; // Stores the object timer id (to access Timer struct array)
-	static double _frequency[9]; // Stores the object timer frequency (to access know current timer period, frequency...)
 
-	static uint8_t bestClock(double frequency, uint32_t& retRC); // Picks the best clock to lower the error
+	// Represents the timer id (index for the array of Timer structs)
+	int timer;
+
+	// Stores the object timer frequency
+	// (allows to access current timer period and frequency):
+	static double _frequency[9];
+
+	// Picks the best clock to lower the error
+	static uint8_t bestClock(double frequency, uint32_t& retRC);
 
 public:
 	struct Timer
@@ -33,8 +40,11 @@ public:
 
 	static DueTimer getAvailable();
 
-	static const Timer Timers[9]; // Store timer configuration (static, as it's fix for every object)
-	static void (*callbacks[9])(); // Needs to be public, because the handlers are outside class
+	// Store timer configuration (static, as it's fix for every object)
+	static const Timer Timers[9];
+
+	// Needs to be public, because the handlers are outside class:
+	static void (*callbacks[9])();
 
 	DueTimer(int _timer);
 	DueTimer attachInterrupt(void (*isr)());
@@ -49,7 +59,8 @@ public:
 	long getPeriod();
 };
 
-extern DueTimer Timer; // Just to call Timer.getAvailable instead of Timer::getAvailable()
+// Just to call Timer.getAvailable instead of Timer::getAvailable() :
+extern DueTimer Timer;
 
 extern DueTimer Timer0;
 extern DueTimer Timer1;
