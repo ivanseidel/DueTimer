@@ -11,15 +11,15 @@
 #include "DueTimer.h"
 
 const DueTimer::Timer DueTimer::Timers[9] = {
-	{TC0, 0, TC0_IRQn,   22},
-	{TC0, 1, TC1_IRQn,   59}, // A5
-	{TC0, 2, TC2_IRQn,   31},
-	{TC1, 0, TC3_IRQn,   57}, // A3
-	{TC1, 1, TC4_IRQn,   56}, // A2
-	{TC1, 2, TC5_IRQn,   67},
-	{TC2, 0, TC6_IRQn, NULL}, // n/a
-	{TC2, 1, TC7_IRQn, NULL}, // LED "RX"
-	{TC2, 2, TC8_IRQn,   30},
+	{TC0, 0, TC0_IRQn,   22, PIO_PERIPH_B},
+	{TC0, 1, TC1_IRQn,   59, PIO_PERIPH_A}, // A5
+	{TC0, 2, TC2_IRQn,   31, PIO_PERIPH_A},
+	{TC1, 0, TC3_IRQn,   57, PIO_PERIPH_B}, // A3
+	{TC1, 1, TC4_IRQn,   56, PIO_PERIPH_B}, // A2
+	{TC1, 2, TC5_IRQn,   67, PIO_PERIPH_A},
+	{TC2, 0, TC6_IRQn, NULL, PIO_PERIPH_B}, // n/a
+	{TC2, 1, TC7_IRQn, NULL, PIO_PERIPH_B}, // LED "RX"
+	{TC2, 2, TC8_IRQn,   30, PIO_PERIPH_B},
 };
 
 void (*DueTimer::callbacks[9])() = {};
@@ -158,10 +158,13 @@ bool DueTimer::setUpCounter() {
 
 	Timer t = Timers[timer];
 
-	if (t.tclk == NULL) return false;
+	if (t.tclk_pin == NULL) return false;
 
 	// Set up the external clock input 
-	pinMode(t.tclk, INPUT);
+	PIO_Configure(g_APinDescription[t.tclk_pin].pPort,
+		t.tclk_periph,
+		g_APinDescription[t.tclk_pin].ulPin,
+		PIO_DEFAULT);
 
 	// Tell the Power Management Controller to disable 
 	// the write protection of the (Timer/Counter) registers:

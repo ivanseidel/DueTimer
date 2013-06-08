@@ -36,7 +36,8 @@ public:
 		Tc *tc;
 		uint32_t channel;
 		IRQn_Type irq;
-		int tclk;
+		int tclk_pin;
+		EPioType tclk_periph;
 	};
 
 	static DueTimer getAvailable();
