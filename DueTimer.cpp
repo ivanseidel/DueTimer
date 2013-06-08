@@ -116,18 +116,18 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 		Pick the best Clock, thanks to Ogle Basil Hall!
 
 		Timer		Definition
-		TIMER_CLOCK1	MCK/2
-		TIMER_CLOCK2	MCK/8
-		TIMER_CLOCK3	MCK/32
-		TIMER_CLOCK4	MCK/128
+		TIMER_CLOCK1	MCK /  2
+		TIMER_CLOCK2	MCK /  8
+		TIMER_CLOCK3	MCK / 32
+		TIMER_CLOCK4	MCK /128
 	*/
 	struct {
 		uint8_t flag;
 		uint8_t divisor;
 	} clockConfig[] = {
-		{ TC_CMR_TCCLKS_TIMER_CLOCK1, 2 },
-		{ TC_CMR_TCCLKS_TIMER_CLOCK2, 8 },
-		{ TC_CMR_TCCLKS_TIMER_CLOCK3, 32 },
+		{ TC_CMR_TCCLKS_TIMER_CLOCK1,   2 },
+		{ TC_CMR_TCCLKS_TIMER_CLOCK2,   8 },
+		{ TC_CMR_TCCLKS_TIMER_CLOCK3,  32 },
 		{ TC_CMR_TCCLKS_TIMER_CLOCK4, 128 }
 	};
 	float ticks;
@@ -162,7 +162,7 @@ DueTimer DueTimer::setFrequency(double frequency){
 	// Remember the frequency
 	_frequency[timer] = frequency;
 
-	// Get current timer configurations
+	// Get current timer configuration
 	Timer t = Timers[timer];
 
 	uint32_t rc = 0;
@@ -173,7 +173,7 @@ DueTimer DueTimer::setFrequency(double frequency){
 	pmc_set_writeprotect(false);
 
 	// Enable clock for the timer
-	pmc_enable_periph_clk((uint32_t)Timers[timer].irq);
+	pmc_enable_periph_clk((uint32_t)t.irq);
 
 	// Find the best clock for the wanted frequency
 	clock = bestClock(frequency, rc);
