@@ -43,8 +43,6 @@ There are `9` Timer objects already instantiated for you:
 
 ### TIPs and Warnings
 
-Prefer to use `Timer3`, `Timer4` and `Timer5` since they have no connection to hardware pins.
-
 ```c++
 Timer4.attatchInterrupt(handler).setFrequency(10).start();
 // Is the same as:
