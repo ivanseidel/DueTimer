@@ -23,7 +23,6 @@ const DueTimer::Timer DueTimer::Timers[9] = {
 };
 
 void (*DueTimer::callbacks[9])() = {};
-double DueTimer::_frequency[9] = {1,1,1,1,1,1,1,1,1};
 
 /*
 	Initializing all timers, so you can use them like this: Timer0.start();
@@ -46,6 +45,8 @@ DueTimer::DueTimer(int _timer){
 	*/
 
 	timer = _timer;
+
+	_frequency[timer] = -1;
 }
 
 DueTimer DueTimer::getAvailable(){
@@ -92,6 +93,9 @@ DueTimer DueTimer::start(long microseconds){
 	if(microseconds > 0)
 		setPeriod(microseconds);
 	
+	if(_frequency[timer] <= 0)
+		setFrequency(1);
+
 	NVIC_ClearPendingIRQ(Timers[timer].irq);
 	NVIC_EnableIRQ(Timers[timer].irq);
 
