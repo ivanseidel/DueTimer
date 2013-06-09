@@ -36,6 +36,8 @@ public:
 		Tc *tc;
 		uint32_t channel;
 		IRQn_Type irq;
+		int tclk_pin;
+		EPioType tclk_periph;
 	};
 
 	static DueTimer getAvailable();
@@ -51,6 +53,10 @@ public:
 	DueTimer detachInterrupt();
 	DueTimer start(long microseconds = -1);
 	DueTimer stop();
+	bool setUpCounter();
+	DueTimer startCounter();
+	DueTimer stopCounter();
+	uint32_t counterValue();
 	DueTimer setFrequency(double frequency);
 	DueTimer setPeriod(long microseconds);
 

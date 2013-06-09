@@ -11,15 +11,15 @@
 #include "DueTimer.h"
 
 const DueTimer::Timer DueTimer::Timers[9] = {
-	{TC0,0,TC0_IRQn},
-	{TC0,1,TC1_IRQn},
-	{TC0,2,TC2_IRQn},
-	{TC1,0,TC3_IRQn},
-	{TC1,1,TC4_IRQn},
-	{TC1,2,TC5_IRQn},
-	{TC2,0,TC6_IRQn},
-	{TC2,1,TC7_IRQn},
-	{TC2,2,TC8_IRQn},
+	{TC0, 0, TC0_IRQn,   22, PIO_PERIPH_B},
+	{TC0, 1, TC1_IRQn,   59, PIO_PERIPH_A}, // A5
+	{TC0, 2, TC2_IRQn,   31, PIO_PERIPH_A},
+	{TC1, 0, TC3_IRQn,   57, PIO_PERIPH_B}, // A3
+	{TC1, 1, TC4_IRQn,   56, PIO_PERIPH_B}, // A2
+	{TC1, 2, TC5_IRQn,   67, PIO_PERIPH_A},
+	{TC2, 0, TC6_IRQn, NULL, PIO_PERIPH_B}, // n/a
+	{TC2, 1, TC7_IRQn, NULL, PIO_PERIPH_B}, // LED "RX"
+	{TC2, 2, TC8_IRQn,   30, PIO_PERIPH_B},
 };
 
 void (*DueTimer::callbacks[9])() = {};
@@ -150,6 +150,87 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 	return clockConfig[bestClock].flag;
 }
 
+bool DueTimer::setUpCounter() {
+	/*
+		Set up a TC channel as hardware counter
+		driven by its external clock input.
+	*/
+
+	Timer t = Timers[timer];
+
+	if (t.tclk_pin == NULL) return false;
+
+	// Set up the external clock input 
+	PIO_Configure(g_APinDescription[t.tclk_pin].pPort,
+		t.tclk_periph,
+		g_APinDescription[t.tclk_pin].ulPin,
+		PIO_DEFAULT);
+
+	// Tell the Power Management Controller to disable 
+	// the write protection of the (Timer/Counter) registers:
+	pmc_set_writeprotect(false);
+
+	// Enable clock for the timer
+	pmc_enable_periph_clk((uint32_t)t.irq);
+
+	uint32_t xc_tclk, tcclk_xc;
+	// Set up external clock input for the channel
+	switch (t.channel) {
+		case 0:
+			xc_tclk = TC_BMR_TC0XC0S_TCLK0;
+			tcclk_xc = TC_CMR_TCCLKS_XC0;
+			break;
+		case 1:
+			xc_tclk = TC_BMR_TC1XC1S_TCLK1;
+			tcclk_xc = TC_CMR_TCCLKS_XC1;
+			break;
+		case 2:
+			xc_tclk = TC_BMR_TC2XC2S_TCLK2;
+			tcclk_xc = TC_CMR_TCCLKS_XC2;
+			break;
+		default:
+			return false;
+	}
+
+	t.tc->TC_BMR |= xc_tclk;
+	TC_Configure(t.tc, t.channel, tcclk_xc | TC_CMR_BURST_NONE);
+
+	return true;
+}
+
+DueTimer DueTimer::startCounter() {
+	/*
+		Start the counter (resets the counter value to zero)
+	*/
+
+	Timer t = Timers[timer];
+
+	TC_Start(t.tc, t.channel);
+
+	return *this;
+}
+
+DueTimer DueTimer::stopCounter() {
+	/*
+		Stop the counter
+	*/
+
+	Timer t = Timers[timer];
+
+	TC_Stop(t.tc, t.channel);
+
+	return *this;
+}
+
+uint32_t DueTimer::counterValue(){
+	/*
+		Get the current counter value
+	*/
+
+	Timer t = Timers[timer];
+
+	return TC_ReadCV(t.tc, t.channel);
+}
 
 DueTimer DueTimer::setFrequency(double frequency){
 	/*
