@@ -23,7 +23,7 @@ const DueTimer::Timer DueTimer::Timers[9] = {
 };
 
 void (*DueTimer::callbacks[9])() = {};
-double DueTimer::_frequency[9] = {1,1,1,1,1,1,1,1,1};
+double DueTimer::_frequency[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
 /*
 	Initializing all timers, so you can use them like this: Timer0.start();
@@ -46,9 +46,6 @@ DueTimer::DueTimer(int _timer){
 	*/
 
 	timer = _timer;
-
-	// Initialize Default frequency
-	setFrequency(_frequency[_timer]);
 }
 
 DueTimer DueTimer::getAvailable(){
@@ -95,6 +92,9 @@ DueTimer DueTimer::start(long microseconds){
 	if(microseconds > 0)
 		setPeriod(microseconds);
 	
+	if(_frequency[timer] <= 0)
+		setFrequency(1);
+
 	NVIC_ClearPendingIRQ(Timers[timer].irq);
 	NVIC_EnableIRQ(Timers[timer].irq);
 
@@ -182,9 +182,6 @@ DueTimer DueTimer::setFrequency(double frequency){
 	// in UP mode with automatic trigger on RC Compare
 	// and sets it up with the determined internal clock as clock input.
 	TC_Configure(t.tc, t.channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | clock);
-
-	// Set up the PWM-like waveform mode
-	TC_SetRA(t.tc, t.channel, rc/2); // 50% low, 50% high (doesn't matter)
 	// Reset counter and fire interrupt when RC value is matched:
 	TC_SetRC(t.tc, t.channel, rc);
 	// Start the Counter channel
