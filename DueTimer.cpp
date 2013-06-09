@@ -23,6 +23,7 @@ const DueTimer::Timer DueTimer::Timers[9] = {
 };
 
 void (*DueTimer::callbacks[9])() = {};
+double DueTimer::_frequency[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
 /*
 	Initializing all timers, so you can use them like this: Timer0.start();
@@ -45,8 +46,6 @@ DueTimer::DueTimer(int _timer){
 	*/
 
 	timer = _timer;
-
-	_frequency[timer] = -1;
 }
 
 DueTimer DueTimer::getAvailable(){
