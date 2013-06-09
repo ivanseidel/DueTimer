@@ -102,6 +102,11 @@ DueTimer::getAvailable().attachInterrupt(callback2).start(10);
 - `static void (*callbacks[])()` - Stores all callbacks for all timers
 
 
+### Hardware Information
+
+More information on the Timer Counter module of the µC on the Arduino Due
+can be found in the documentation file [TimerCounter](TimerCounter.md).
+
 ### Version History
 
 * `1.2 (2013-30-03)`: Clock selection. Getters. `getAvailable()`. "AvailableTimer" Example.
