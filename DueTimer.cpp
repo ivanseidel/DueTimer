@@ -97,6 +97,8 @@ DueTimer DueTimer::start(long microseconds){
 
 	NVIC_ClearPendingIRQ(Timers[timer].irq);
 	NVIC_EnableIRQ(Timers[timer].irq);
+	
+	TC_Start(Timers[timer].tc, Timers[timer].channel);
 
 	return *this;
 }
@@ -107,6 +109,8 @@ DueTimer DueTimer::stop(){
 	*/
 
 	NVIC_DisableIRQ(Timers[timer].irq);
+	
+	TC_Stop(Timers[timer].tc, Timers[timer].channel);
 
 	return *this;
 }
@@ -184,8 +188,6 @@ DueTimer DueTimer::setFrequency(double frequency){
 	TC_Configure(t.tc, t.channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | clock);
 	// Reset counter and fire interrupt when RC value is matched:
 	TC_SetRC(t.tc, t.channel, rc);
-	// Start the Counter channel
-	TC_Start(t.tc, t.channel);
 	// Enable the RC Compare Interrupt...
 	t.tc->TC_CHANNEL[t.channel].TC_IER=TC_IER_CPCS;
 	// ... and disable all others.
