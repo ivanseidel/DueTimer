@@ -4,8 +4,8 @@ Timer Library to work with Arduino DUE
 
 ## Installation
 
-1. [Download](https://github.com/ivanseidel/DueTimer/archive/master.zip) the Master branch from gitHub.
-2. Unzip and modify the Folder name to "DueTimer" (Remove the '-master')
+1. [Download](https://github.com/ivanseidel/DueTimer/releases) the Latest release from gitHub.
+2. Unzip and modify the Folder name to "DueTimer" (Remove the '-version')
 3. Paste the modified folder on your Library folder (On your `Libraries` folder inside Sketchbooks or Arduino software).
 
 ## Getting Started
