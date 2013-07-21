@@ -113,3 +113,4 @@ can be found in the documentation file [TimerCounter](TimerCounter.md).
 * `1.1 (2013-30-03)`: Added Timer6, Timer7, Timer8 (TC2).
 * `1.0 (2013-30-03)`: Original release.
 
+![DueTimer](https://d2weczhvl823v0.cloudfront.net/ivanseidel/DueTimer/trend.png)
