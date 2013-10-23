@@ -56,10 +56,10 @@ DueTimer myTimer = DueTimer(3); // Creates a Timer 3 object.
 DueTimer myTimer = DueTimer(t); // Creates a Timer t object.
 // Note: Maximum t allowed is 8, as there is only 9 timers [0..8];
 
-Timer1.setHandler(handler1).start(10);
-Timer1.setHandler(handler2).start(10);
+Timer1.attatchInterrupt(handler1).start(10);
+Timer1.attatchInterrupt(handler2).start(10);
 DueTimer myTimer = DueTimer(1);
-myTimer.setHandler(handler3).start(20);
+myTimer.attatchInterrupt(handler3).start(20);
 // Will run only handle3, on Timer 1 (You are just overriding the callback)
 
 Timer.getAvailable().attachInterrupt(callback1).start(10);
