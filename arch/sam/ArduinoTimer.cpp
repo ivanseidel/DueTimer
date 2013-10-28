@@ -1,6 +1,6 @@
 /*
-  DueTimer.cpp - Implementation of Timers defined on DueTimer.h
-  For instructions, go to https://github.com/ivanseidel/DueTimer
+  ArduinoTimer.cpp - Implementation of Timers defined on ArduinoTimer.h
+  For instructions, go to https://github.com/ivanseidel/ArduinoTimer
 
   Created by Ivan Seidel Gomes, March, 2013.
   Modified by Philipp Klaus, June 2013.
@@ -8,9 +8,9 @@
   Released into the public domain.
 */
 
-#include "DueTimer.h"
+#include <ArduinoTimer.h>
 
-const DueTimer::Timer DueTimer::Timers[9] = {
+const ArduinoTimer::Timer ArduinoTimer::Timers[9] = {
 	{TC0,0,TC0_IRQn},
 	{TC0,1,TC1_IRQn},
 	{TC0,2,TC2_IRQn},
@@ -22,46 +22,46 @@ const DueTimer::Timer DueTimer::Timers[9] = {
 	{TC2,2,TC8_IRQn},
 };
 
-void (*DueTimer::callbacks[9])() = {};
-double DueTimer::_frequency[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+void (*ArduinoTimer::callbacks[9])() = {};
+double ArduinoTimer::_frequency[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
 /*
 	Initializing all timers, so you can use them like this: Timer0.start();
 */
-DueTimer Timer(0);
+ArduinoTimer Timer(0);
 
-DueTimer Timer0(0);
-DueTimer Timer1(1);
-DueTimer Timer2(2);
-DueTimer Timer3(3);
-DueTimer Timer4(4);
-DueTimer Timer5(5);
-DueTimer Timer6(6);
-DueTimer Timer7(7);
-DueTimer Timer8(8);
+ArduinoTimer Timer0(0);
+ArduinoTimer Timer1(1);
+ArduinoTimer Timer2(2);
+ArduinoTimer Timer3(3);
+ArduinoTimer Timer4(4);
+ArduinoTimer Timer5(5);
+ArduinoTimer Timer6(6);
+ArduinoTimer Timer7(7);
+ArduinoTimer Timer8(8);
 
-DueTimer::DueTimer(int _timer){
+ArduinoTimer::ArduinoTimer(int _timer){
 	/*
-		The constructor of the class DueTimer 
+		The constructor of the class ArduinoTimer 
 	*/
 
 	timer = _timer;
 }
 
-DueTimer DueTimer::getAvailable(){
+ArduinoTimer ArduinoTimer::getAvailable(){
 	/*
 		Return the first timer with no callback set
 	*/
 
 	for(int i = 0; i < 9; i++){
 		if(!callbacks[i])
-			return DueTimer(i);
+			return ArduinoTimer(i);
 	}
 	// Default, return Timer0;
-	return DueTimer(0);
+	return ArduinoTimer(0);
 }
 
-DueTimer DueTimer::attachInterrupt(void (*isr)()){
+ArduinoTimer ArduinoTimer::attachInterrupt(void (*isr)()){
 	/*
 		Links the function passed as argument to the timer of the object
 	*/
@@ -71,7 +71,7 @@ DueTimer DueTimer::attachInterrupt(void (*isr)()){
 	return *this;
 }
 
-DueTimer DueTimer::detachInterrupt(){
+ArduinoTimer ArduinoTimer::detachInterrupt(){
 	/*
 		Links the function passed as argument to the timer of the object
 	*/
@@ -83,7 +83,7 @@ DueTimer DueTimer::detachInterrupt(){
 	return *this;
 }
 
-DueTimer DueTimer::start(long microseconds){
+ArduinoTimer ArduinoTimer::start(long microseconds){
 	/*
 		Start the timer
 		If a period is set, then sets the period and start the timer
@@ -101,7 +101,7 @@ DueTimer DueTimer::start(long microseconds){
 	return *this;
 }
 
-DueTimer DueTimer::stop(){
+ArduinoTimer ArduinoTimer::stop(){
 	/*
 		Stop the timer
 	*/
@@ -111,7 +111,7 @@ DueTimer DueTimer::stop(){
 	return *this;
 }
 
-uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
+uint8_t ArduinoTimer::bestClock(double frequency, uint32_t& retRC){
 	/*
 		Pick the best Clock, thanks to Ogle Basil Hall!
 
@@ -151,7 +151,7 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 }
 
 
-DueTimer DueTimer::setFrequency(double frequency){
+ArduinoTimer ArduinoTimer::setFrequency(double frequency){
 	/*
 		Set the timer frequency (in Hz)
 	*/
@@ -194,7 +194,7 @@ DueTimer DueTimer::setFrequency(double frequency){
 	return *this;
 }
 
-DueTimer DueTimer::setPeriod(long microseconds){
+ArduinoTimer ArduinoTimer::setPeriod(long microseconds){
 	/*
 		Set the period of the timer (in microseconds)
 	*/
@@ -205,7 +205,7 @@ DueTimer DueTimer::setPeriod(long microseconds){
 	return *this;
 }
 
-double DueTimer::getFrequency(){
+double ArduinoTimer::getFrequency(){
 	/*
 		Get current time frequency
 	*/
@@ -213,7 +213,7 @@ double DueTimer::getFrequency(){
 	return _frequency[timer];
 }
 
-long DueTimer::getPeriod(){
+long ArduinoTimer::getPeriod(){
 	/*
 		Get current time period
 	*/
@@ -228,37 +228,51 @@ long DueTimer::getPeriod(){
 */
 void TC0_Handler(){
 	TC_GetStatus(TC0, 0);
-	DueTimer::callbacks[0]();
+	ArduinoTimer::callbacks[0]();
 }
 void TC1_Handler(){
 	TC_GetStatus(TC0, 1);
-	DueTimer::callbacks[1]();
+	ArduinoTimer::callbacks[1]();
 }
 void TC2_Handler(){
 	TC_GetStatus(TC0, 2);
-	DueTimer::callbacks[2]();
+	ArduinoTimer::callbacks[2]();
 }
 void TC3_Handler(){
 	TC_GetStatus(TC1, 0);
-	DueTimer::callbacks[3]();
+	ArduinoTimer::callbacks[3]();
 }
 void TC4_Handler(){
 	TC_GetStatus(TC1, 1);
-	DueTimer::callbacks[4]();
+	ArduinoTimer::callbacks[4]();
 }
 void TC5_Handler(){
 	TC_GetStatus(TC1, 2);
-	DueTimer::callbacks[5]();
+	ArduinoTimer::callbacks[5]();
 }
 void TC6_Handler(){
 	TC_GetStatus(TC2, 0);
-	DueTimer::callbacks[6]();
+	ArduinoTimer::callbacks[6]();
 }
 void TC7_Handler(){
 	TC_GetStatus(TC2, 1);
-	DueTimer::callbacks[7]();
+	ArduinoTimer::callbacks[7]();
 }
 void TC8_Handler(){
 	TC_GetStatus(TC2, 2);
-	DueTimer::callbacks[8]();
+	ArduinoTimer::callbacks[8]();
 }
+
+// Just to call Timer.getAvailable instead of Timer::getAvailable() :
+extern ArduinoTimer Timer;
+
+extern ArduinoTimer Timer0;
+extern ArduinoTimer Timer1;
+extern ArduinoTimer Timer2;
+extern ArduinoTimer Timer3;
+extern ArduinoTimer Timer4;
+extern ArduinoTimer Timer5;
+extern ArduinoTimer Timer6;
+extern ArduinoTimer Timer7;
+extern ArduinoTimer Timer8;
+
