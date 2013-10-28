@@ -1,4 +1,4 @@
-#include <DueTimer.h>
+#include <ArduinoTimer.h>
 
 void playVideogame(){
 	Serial.println("[-        ] I'm playing Videogame!");
