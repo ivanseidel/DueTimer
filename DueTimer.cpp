@@ -22,7 +22,23 @@ const DueTimer::Timer DueTimer::Timers[9] = {
 	{TC2,2,TC8_IRQn},
 };
 
-void (*DueTimer::callbacks[9])() = {};
+// Fix for compatibility with Servo library
+#ifdef USING_SERVO_LIB
+	// Set callbacks as used, allowing DueTimer::getAvailable() to work
+	void (*DueTimer::callbacks[9])() = {
+		(void (*)()) 1, // Timer 0 - Occupied
+		(void (*)()) 0, // Timer 1
+		(void (*)()) 1, // Timer 2 - Occupied
+		(void (*)()) 1, // Timer 3 - Occupied
+		(void (*)()) 1, // Timer 4 - Occupied
+		(void (*)()) 1, // Timer 5 - Occupied
+		(void (*)()) 0, // Timer 6
+		(void (*)()) 0, // Timer 7
+		(void (*)()) 0  // Timer 8
+	};
+#else
+	void (*DueTimer::callbacks[9])() = {};
+#endif
 double DueTimer::_frequency[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
 /*
@@ -30,12 +46,15 @@ double DueTimer::_frequency[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
 */
 DueTimer Timer(0);
 
-DueTimer Timer0(0);
 DueTimer Timer1(1);
-DueTimer Timer2(2);
-DueTimer Timer3(3);
-DueTimer Timer4(4);
-DueTimer Timer5(5);
+// Fix for compatibility with Servo library
+#ifndef USING_SERVO_LIB
+	DueTimer Timer0(0);
+	DueTimer Timer2(2);
+	DueTimer Timer3(3);
+	DueTimer Timer4(4);
+	DueTimer Timer5(5);
+#endif
 DueTimer Timer6(6);
 DueTimer Timer7(7);
 DueTimer Timer8(8);
@@ -228,14 +247,19 @@ long DueTimer::getPeriod(){
 	Implementation of the timer callbacks defined in 
 	arduino-1.5.2/hardware/arduino/sam/system/CMSIS/Device/ATMEL/sam3xa/include/sam3x8e.h
 */
+// Fix for compatibility with Servo library
+#ifndef USING_SERVO_LIB
 void TC0_Handler(){
 	TC_GetStatus(TC0, 0);
 	DueTimer::callbacks[0]();
 }
+#endif
 void TC1_Handler(){
 	TC_GetStatus(TC0, 1);
 	DueTimer::callbacks[1]();
 }
+// Fix for compatibility with Servo library
+#ifndef USING_SERVO_LIB
 void TC2_Handler(){
 	TC_GetStatus(TC0, 2);
 	DueTimer::callbacks[2]();
@@ -252,6 +276,7 @@ void TC5_Handler(){
 	TC_GetStatus(TC1, 2);
 	DueTimer::callbacks[5]();
 }
+#endif
 void TC6_Handler(){
 	TC_GetStatus(TC2, 0);
 	DueTimer::callbacks[6]();
