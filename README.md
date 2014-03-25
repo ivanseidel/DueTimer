@@ -69,6 +69,16 @@ DueTimer::getAvailable().attachInterrupt(callback2).start(10);
 // And so on...
 ```
 
+### Compatibility with Servo.h
+
+Because Servo Library uses the same callbacks of DueTimer, we provides a custom solution for working with both of them. You will need uncommend the line in `DueTimer.h` in `DueTimer` folder inside the `Libraries` folder.
+
+But, Timers 0,2,3,4 and 5 will not Work anymore. Do do so, uncomment the following line in `DueTimer.h`:
+
+```
+#define USING_SERVO_LIB	true
+```
+
 ## Library Reference
 
 ### You should know:
