@@ -7,6 +7,7 @@ Timer Library to work with Arduino DUE
 1. [Download](https://github.com/ivanseidel/DueTimer/releases) the Latest release from gitHub.
 2. Unzip and modify the Folder name to "DueTimer" (Remove the '-version')
 3. Paste the modified folder on your Library folder (On your `Libraries` folder inside Sketchbooks or Arduino software).
+4. Re-open Arduino Software
 
 ## Getting Started
 
@@ -71,9 +72,9 @@ DueTimer::getAvailable().attachInterrupt(callback2).start(10);
 
 ### Compatibility with Servo.h
 
-Because Servo Library uses the same callbacks of DueTimer, we provides a custom solution for working with both of them. You will need uncommend the line in `DueTimer.h` in `DueTimer` folder inside the `Libraries` folder.
+Because Servo Library uses the same callbacks of DueTimer, we provides a custom solution for working with both of them. However, Timers 0,2,3,4 and 5 will not Work anymore.
 
-But, Timers 0,2,3,4 and 5 will not Work anymore. Do do so, uncomment the following line in `DueTimer.h`:
+You will need uncommend the line in `DueTimer.h` in `DueTimer` folder inside the `Libraries` folder. Uncomment the following line in `DueTimer.h`:
 
 ```
 #define USING_SERVO_LIB	true
