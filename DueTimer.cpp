@@ -10,7 +10,7 @@
 
 #include "DueTimer.h"
 
-const DueTimer::Timer DueTimer::Timers[9] = {
+const DueTimer::Timer DueTimer::Timers[NUM_TIMERS] = {
 	{TC0,0,TC0_IRQn},
 	{TC0,1,TC1_IRQn},
 	{TC0,2,TC2_IRQn},
@@ -25,7 +25,7 @@ const DueTimer::Timer DueTimer::Timers[9] = {
 // Fix for compatibility with Servo library
 #ifdef USING_SERVO_LIB
 	// Set callbacks as used, allowing DueTimer::getAvailable() to work
-	void (*DueTimer::callbacks[9])() = {
+	void (*DueTimer::callbacks[NUM_TIMERS])() = {
 		(void (*)()) 1, // Timer 0 - Occupied
 		(void (*)()) 0, // Timer 1
 		(void (*)()) 1, // Timer 2 - Occupied
@@ -37,9 +37,9 @@ const DueTimer::Timer DueTimer::Timers[9] = {
 		(void (*)()) 0  // Timer 8
 	};
 #else
-	void (*DueTimer::callbacks[9])() = {};
+	void (*DueTimer::callbacks[NUM_TIMERS])() = {};
 #endif
-double DueTimer::_frequency[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+double DueTimer::_frequency[NUM_TIMERS] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
 /*
 	Initializing all timers, so you can use them like this: Timer0.start();
@@ -72,7 +72,7 @@ DueTimer DueTimer::getAvailable(){
 		Return the first timer with no callback set
 	*/
 
-	for(int i = 0; i < 9; i++){
+	for(int i = 0; i < NUM_TIMERS; i++){
 		if(!callbacks[i])
 			return DueTimer(i);
 	}

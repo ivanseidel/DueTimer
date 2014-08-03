@@ -30,6 +30,9 @@
 	#warning "HEY! You have set flag USING_SERVO_LIB. Timer0, 2,3,4 and 5 are not available"
 #endif
 
+
+#define NUM_TIMERS  9
+
 class DueTimer
 {
 protected:
@@ -39,7 +42,7 @@ protected:
 
 	// Stores the object timer frequency
 	// (allows to access current timer period and frequency):
-	static double _frequency[9];
+	static double _frequency[NUM_TIMERS];
 
 	// Picks the best clock to lower the error
 	static uint8_t bestClock(double frequency, uint32_t& retRC);
@@ -55,10 +58,10 @@ public:
 	static DueTimer getAvailable();
 
 	// Store timer configuration (static, as it's fix for every object)
-	static const Timer Timers[9];
+	static const Timer Timers[NUM_TIMERS];
 
 	// Needs to be public, because the handlers are outside class:
-	static void (*callbacks[9])();
+	static void (*callbacks[NUM_TIMERS])();
 
 	DueTimer(int _timer);
 	DueTimer attachInterrupt(void (*isr)());
