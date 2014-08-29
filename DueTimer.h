@@ -38,7 +38,7 @@ class DueTimer
 protected:
 
 	// Represents the timer id (index for the array of Timer structs)
-	int timer;
+	const int timer;
 
 	// Stores the object timer frequency
 	// (allows to access current timer period and frequency):
@@ -72,8 +72,8 @@ public:
 	DueTimer setPeriod(long microseconds);
 
 
-	double getFrequency();
-	long getPeriod();
+	double getFrequency() const;
+	long getPeriod() const;
 };
 
 // Just to call Timer.getAvailable instead of Timer::getAvailable() :

@@ -59,12 +59,10 @@ DueTimer Timer6(6);
 DueTimer Timer7(7);
 DueTimer Timer8(8);
 
-DueTimer::DueTimer(int _timer){
+DueTimer::DueTimer(int _timer) : timer(_timer){
 	/*
 		The constructor of the class DueTimer 
 	*/
-
-	timer = _timer;
 }
 
 DueTimer DueTimer::getAvailable(){
@@ -226,7 +224,7 @@ DueTimer DueTimer::setPeriod(long microseconds){
 	return *this;
 }
 
-double DueTimer::getFrequency(){
+double DueTimer::getFrequency() const {
 	/*
 		Get current time frequency
 	*/
@@ -234,7 +232,7 @@ double DueTimer::getFrequency(){
 	return _frequency[timer];
 }
 
-long DueTimer::getPeriod(){
+long DueTimer::getPeriod() const {
 	/*
 		Get current time period
 	*/
