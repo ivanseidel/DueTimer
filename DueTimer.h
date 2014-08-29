@@ -74,12 +74,12 @@ public:
 	static const Timer Timers[NUM_TIMERS];
 
 	DueTimer(int _timer);
-	DueTimer attachInterrupt(void (*isr)());
-	DueTimer detachInterrupt(void);
-	DueTimer start(long microseconds = -1);
-	DueTimer stop(void);
-	DueTimer setFrequency(double frequency);
-	DueTimer setPeriod(long microseconds);
+	DueTimer& attachInterrupt(void (*isr)());
+	DueTimer& detachInterrupt(void);
+	DueTimer& start(long microseconds = -1);
+	DueTimer& stop(void);
+	DueTimer& setFrequency(double frequency);
+	DueTimer& setPeriod(long microseconds);
 
 
 	double getFrequency(void) const;

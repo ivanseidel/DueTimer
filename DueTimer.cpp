@@ -78,7 +78,7 @@ DueTimer DueTimer::getAvailable(void){
 	return DueTimer(0);
 }
 
-DueTimer DueTimer::attachInterrupt(void (*isr)()){
+DueTimer& DueTimer::attachInterrupt(void (*isr)()){
 	/*
 		Links the function passed as argument to the timer of the object
 	*/
@@ -88,7 +88,7 @@ DueTimer DueTimer::attachInterrupt(void (*isr)()){
 	return *this;
 }
 
-DueTimer DueTimer::detachInterrupt(void){
+DueTimer& DueTimer::detachInterrupt(void){
 	/*
 		Links the function passed as argument to the timer of the object
 	*/
@@ -100,7 +100,7 @@ DueTimer DueTimer::detachInterrupt(void){
 	return *this;
 }
 
-DueTimer DueTimer::start(long microseconds){
+DueTimer& DueTimer::start(long microseconds){
 	/*
 		Start the timer
 		If a period is set, then sets the period and start the timer
@@ -120,7 +120,7 @@ DueTimer DueTimer::start(long microseconds){
 	return *this;
 }
 
-DueTimer DueTimer::stop(void){
+DueTimer& DueTimer::stop(void){
 	/*
 		Stop the timer
 	*/
@@ -142,7 +142,7 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 		TIMER_CLOCK3	MCK / 32
 		TIMER_CLOCK4	MCK /128
 	*/
-	struct {
+	const struct {
 		uint8_t flag;
 		uint8_t divisor;
 	} clockConfig[] = {
@@ -160,7 +160,7 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 	{
 		ticks = (float) VARIANT_MCK / frequency / (float) clockConfig[clkId].divisor;
 		error = abs(ticks - round(ticks));
-		if (abs(error) < bestError)
+		if (error < bestError)
 		{
 			bestClock = clkId;
 			bestError = error;
@@ -172,7 +172,7 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 }
 
 
-DueTimer DueTimer::setFrequency(double frequency){
+DueTimer& DueTimer::setFrequency(double frequency){
 	/*
 		Set the timer frequency (in Hz)
 	*/
@@ -213,7 +213,7 @@ DueTimer DueTimer::setFrequency(double frequency){
 	return *this;
 }
 
-DueTimer DueTimer::setPeriod(long microseconds){
+DueTimer& DueTimer::setPeriod(long microseconds){
 	/*
 		Set the period of the timer (in microseconds)
 	*/
