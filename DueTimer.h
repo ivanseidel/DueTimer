@@ -47,6 +47,19 @@ protected:
 	// Picks the best clock to lower the error
 	static uint8_t bestClock(double frequency, uint32_t& retRC);
 
+  // Make Interrupt handlers friends, so they can use callbacks
+  friend void TC0_Handler(void);
+  friend void TC1_Handler(void);
+  friend void TC2_Handler(void);
+  friend void TC3_Handler(void);
+  friend void TC4_Handler(void);
+  friend void TC5_Handler(void);
+  friend void TC6_Handler(void);
+  friend void TC7_Handler(void);
+  friend void TC8_Handler(void);
+
+	static void (*callbacks[NUM_TIMERS])();
+
 public:
 	struct Timer
 	{
@@ -59,9 +72,6 @@ public:
 
 	// Store timer configuration (static, as it's fix for every object)
 	static const Timer Timers[NUM_TIMERS];
-
-	// Needs to be public, because the handlers are outside class:
-	static void (*callbacks[NUM_TIMERS])();
 
 	DueTimer(int _timer);
 	DueTimer attachInterrupt(void (*isr)());
