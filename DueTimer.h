@@ -55,7 +55,7 @@ public:
 		IRQn_Type irq;
 	};
 
-	static DueTimer getAvailable();
+	static DueTimer getAvailable(void);
 
 	// Store timer configuration (static, as it's fix for every object)
 	static const Timer Timers[NUM_TIMERS];
@@ -65,15 +65,15 @@ public:
 
 	DueTimer(int _timer);
 	DueTimer attachInterrupt(void (*isr)());
-	DueTimer detachInterrupt();
+	DueTimer detachInterrupt(void);
 	DueTimer start(long microseconds = -1);
-	DueTimer stop();
+	DueTimer stop(void);
 	DueTimer setFrequency(double frequency);
 	DueTimer setPeriod(long microseconds);
 
 
-	double getFrequency() const;
-	long getPeriod() const;
+	double getFrequency(void) const;
+	long getPeriod(void) const;
 };
 
 // Just to call Timer.getAvailable instead of Timer::getAvailable() :

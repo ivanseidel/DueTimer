@@ -65,7 +65,7 @@ DueTimer::DueTimer(int _timer) : timer(_timer){
 	*/
 }
 
-DueTimer DueTimer::getAvailable(){
+DueTimer DueTimer::getAvailable(void){
 	/*
 		Return the first timer with no callback set
 	*/
@@ -88,7 +88,7 @@ DueTimer DueTimer::attachInterrupt(void (*isr)()){
 	return *this;
 }
 
-DueTimer DueTimer::detachInterrupt(){
+DueTimer DueTimer::detachInterrupt(void){
 	/*
 		Links the function passed as argument to the timer of the object
 	*/
@@ -120,7 +120,7 @@ DueTimer DueTimer::start(long microseconds){
 	return *this;
 }
 
-DueTimer DueTimer::stop(){
+DueTimer DueTimer::stop(void){
 	/*
 		Stop the timer
 	*/
@@ -224,7 +224,7 @@ DueTimer DueTimer::setPeriod(long microseconds){
 	return *this;
 }
 
-double DueTimer::getFrequency() const {
+double DueTimer::getFrequency(void) const {
 	/*
 		Get current time frequency
 	*/
@@ -232,7 +232,7 @@ double DueTimer::getFrequency() const {
 	return _frequency[timer];
 }
 
-long DueTimer::getPeriod() const {
+long DueTimer::getPeriod(void) const {
 	/*
 		Get current time period
 	*/
@@ -247,43 +247,43 @@ long DueTimer::getPeriod() const {
 */
 // Fix for compatibility with Servo library
 #ifndef USING_SERVO_LIB
-void TC0_Handler(){
+void TC0_Handler(void){
 	TC_GetStatus(TC0, 0);
 	DueTimer::callbacks[0]();
 }
 #endif
-void TC1_Handler(){
+void TC1_Handler(void){
 	TC_GetStatus(TC0, 1);
 	DueTimer::callbacks[1]();
 }
 // Fix for compatibility with Servo library
 #ifndef USING_SERVO_LIB
-void TC2_Handler(){
+void TC2_Handler(void){
 	TC_GetStatus(TC0, 2);
 	DueTimer::callbacks[2]();
 }
-void TC3_Handler(){
+void TC3_Handler(void){
 	TC_GetStatus(TC1, 0);
 	DueTimer::callbacks[3]();
 }
-void TC4_Handler(){
+void TC4_Handler(void){
 	TC_GetStatus(TC1, 1);
 	DueTimer::callbacks[4]();
 }
-void TC5_Handler(){
+void TC5_Handler(void){
 	TC_GetStatus(TC1, 2);
 	DueTimer::callbacks[5]();
 }
 #endif
-void TC6_Handler(){
+void TC6_Handler(void){
 	TC_GetStatus(TC2, 0);
 	DueTimer::callbacks[6]();
 }
-void TC7_Handler(){
+void TC7_Handler(void){
 	TC_GetStatus(TC2, 1);
 	DueTimer::callbacks[7]();
 }
-void TC8_Handler(){
+void TC8_Handler(void){
 	TC_GetStatus(TC2, 2);
 	DueTimer::callbacks[8]();
 }
