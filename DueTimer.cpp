@@ -213,7 +213,7 @@ DueTimer& DueTimer::setFrequency(double frequency){
 	return *this;
 }
 
-DueTimer& DueTimer::setPeriod(long microseconds){
+DueTimer& DueTimer::setPeriod(unsigned long microseconds){
 	/*
 		Set the period of the timer (in microseconds)
 	*/

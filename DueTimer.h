@@ -80,7 +80,7 @@ public:
 	DueTimer& start(long microseconds = -1);
 	DueTimer& stop(void);
 	DueTimer& setFrequency(double frequency);
-	DueTimer& setPeriod(long microseconds);
+	DueTimer& setPeriod(unsigned long microseconds);
 
 	double getFrequency(void) const;
 	long getPeriod(void) const;
