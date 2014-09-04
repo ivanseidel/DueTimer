@@ -60,7 +60,6 @@ protected:
 
 	static void (*callbacks[NUM_TIMERS])();
 
-public:
 	struct Timer
 	{
 		Tc *tc;
@@ -68,10 +67,12 @@ public:
 		IRQn_Type irq;
 	};
 
-	static DueTimer getAvailable(void);
-
-	// Store timer configuration (static, as it's fix for every object)
+	// Store timer configuration (static, as it's fixed for every object)
 	static const Timer Timers[NUM_TIMERS];
+
+public:
+
+	static DueTimer getAvailable(void);
 
 	DueTimer(int _timer);
 	DueTimer& attachInterrupt(void (*isr)());
@@ -80,7 +81,6 @@ public:
 	DueTimer& stop(void);
 	DueTimer& setFrequency(double frequency);
 	DueTimer& setPeriod(long microseconds);
-
 
 	double getFrequency(void) const;
 	long getPeriod(void) const;
