@@ -59,7 +59,7 @@ DueTimer Timer6(6);
 DueTimer Timer7(7);
 DueTimer Timer8(8);
 
-DueTimer::DueTimer(int _timer) : timer(_timer){
+DueTimer::DueTimer(unsigned short _timer) : timer(_timer){
 	/*
 		The constructor of the class DueTimer 
 	*/

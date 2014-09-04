@@ -38,7 +38,7 @@ class DueTimer
 protected:
 
 	// Represents the timer id (index for the array of Timer structs)
-	const int timer;
+	const unsigned short timer;
 
 	// Stores the object timer frequency
 	// (allows to access current timer period and frequency):
@@ -74,7 +74,7 @@ public:
 
 	static DueTimer getAvailable(void);
 
-	DueTimer(int _timer);
+	DueTimer(unsigned short _timer);
 	DueTimer& attachInterrupt(void (*isr)());
 	DueTimer& detachInterrupt(void);
 	DueTimer& start(long microseconds = -1);
