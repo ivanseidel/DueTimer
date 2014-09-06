@@ -30,21 +30,36 @@
 	#warning "HEY! You have set flag USING_SERVO_LIB. Timer0, 2,3,4 and 5 are not available"
 #endif
 
+
+#define NUM_TIMERS  9
+
 class DueTimer
 {
 protected:
 
 	// Represents the timer id (index for the array of Timer structs)
-	int timer;
+	const unsigned short timer;
 
 	// Stores the object timer frequency
 	// (allows to access current timer period and frequency):
-	static double _frequency[9];
+	static double _frequency[NUM_TIMERS];
 
 	// Picks the best clock to lower the error
 	static uint8_t bestClock(double frequency, uint32_t& retRC);
 
-public:
+  // Make Interrupt handlers friends, so they can use callbacks
+  friend void TC0_Handler(void);
+  friend void TC1_Handler(void);
+  friend void TC2_Handler(void);
+  friend void TC3_Handler(void);
+  friend void TC4_Handler(void);
+  friend void TC5_Handler(void);
+  friend void TC6_Handler(void);
+  friend void TC7_Handler(void);
+  friend void TC8_Handler(void);
+
+	static void (*callbacks[NUM_TIMERS])();
+
 	struct Timer
 	{
 		Tc *tc;
@@ -52,25 +67,23 @@ public:
 		IRQn_Type irq;
 	};
 
-	static DueTimer getAvailable();
+	// Store timer configuration (static, as it's fixed for every object)
+	static const Timer Timers[NUM_TIMERS];
 
-	// Store timer configuration (static, as it's fix for every object)
-	static const Timer Timers[9];
+public:
 
-	// Needs to be public, because the handlers are outside class:
-	static void (*callbacks[9])();
+	static DueTimer getAvailable(void);
 
-	DueTimer(int _timer);
-	DueTimer attachInterrupt(void (*isr)());
-	DueTimer detachInterrupt();
-	DueTimer start(long microseconds = -1);
-	DueTimer stop();
-	DueTimer setFrequency(double frequency);
-	DueTimer setPeriod(long microseconds);
+	DueTimer(unsigned short _timer);
+	DueTimer& attachInterrupt(void (*isr)());
+	DueTimer& detachInterrupt(void);
+	DueTimer& start(long microseconds = -1);
+	DueTimer& stop(void);
+	DueTimer& setFrequency(double frequency);
+	DueTimer& setPeriod(unsigned long microseconds);
 
-
-	double getFrequency();
-	long getPeriod();
+	double getFrequency(void) const;
+	long getPeriod(void) const;
 };
 
 // Just to call Timer.getAvailable instead of Timer::getAvailable() :
