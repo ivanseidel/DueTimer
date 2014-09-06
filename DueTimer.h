@@ -71,6 +71,11 @@ public:
 
 	double getFrequency();
 	long getPeriod();
+
+  inline __attribute__((always_inline)) bool operator== (const DueTimer& rhs) const
+    {return timer == rhs.timer; };
+  inline __attribute__((always_inline)) bool operator!= (const DueTimer& rhs) const
+    {return timer != rhs.timer; };
 };
 
 // Just to call Timer.getAvailable instead of Timer::getAvailable() :
