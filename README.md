@@ -104,9 +104,9 @@ You will need uncommend the line in `DueTimer.h` in `DueTimer` folder inside the
 
 ### You don't need to know:
 
-- `int timer` - Stores the object timer id (to acces Timers struct array).
+- `unsigned short timer` - Stores the object timer id (to access Timers struct array).
 
-- `DueTimer(int _timer)` - Instantiate a new DueTimer object for Timer _timer (NOTE: All objects are already instantiated!).
+- `DueTimer(unsigned short _timer)` - Instantiate a new DueTimer object for Timer _timer (NOTE: All objects are already instantiated!).
 
 - `static const Timer Timers[]` - Stores all timers information
 
