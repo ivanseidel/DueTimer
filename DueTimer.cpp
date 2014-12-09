@@ -159,7 +159,8 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 	do
 	{
 		ticks = (float) VARIANT_MCK / frequency / (float) clockConfig[clkId].divisor;
-		error = abs(ticks - round(ticks));
+		// error = abs(ticks - round(ticks));
+		error = clockConfig[clkId].divisor * abs(ticks – round(ticks));	// Error comparison needs scaling
 		if (error < bestError)
 		{
 			bestClock = clkId;
@@ -180,8 +181,8 @@ DueTimer& DueTimer::setFrequency(double frequency){
 	// Prevent negative frequencies
 	if(frequency <= 0) { frequency = 1; }
 
-	// Remember the frequency
-	_frequency[timer] = frequency;
+	// Remember the frequency — see below how the exact frequency is reported instead
+	//_frequency[timer] = frequency;
 
 	// Get current timer configuration
 	Timer t = Timers[timer];
@@ -198,6 +199,21 @@ DueTimer& DueTimer::setFrequency(double frequency){
 
 	// Find the best clock for the wanted frequency
 	clock = bestClock(frequency, rc);
+
+	switch (clock) {
+	  case TC_CMR_TCCLKS_TIMER_CLOCK1:
+	    _frequency[timer] = (double)VARIANT_MCK / 2.0 / (double)rc;
+	    break;
+	  case TC_CMR_TCCLKS_TIMER_CLOCK2:
+	    _frequency[timer] = (double)VARIANT_MCK / 8.0 / (double)rc;
+	    break;
+	  case TC_CMR_TCCLKS_TIMER_CLOCK3:
+	    _frequency[timer] = (double)VARIANT_MCK / 32.0 / (double)rc;
+	    break;
+	  default: // TC_CMR_TCCLKS_TIMER_CLOCK4
+	    _frequency[timer] = (double)VARIANT_MCK / 128.0 / (double)rc;
+	    break;
+	}
 
 	// Set up the Timer in waveform mode which creates a PWM
 	// in UP mode with automatic trigger on RC Compare
