@@ -160,7 +160,7 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 	{
 		ticks = (float) VARIANT_MCK / frequency / (float) clockConfig[clkId].divisor;
 		// error = abs(ticks - round(ticks));
-		error = clockConfig[clkId].divisor * abs(ticks – round(ticks));	// Error comparison needs scaling
+		error = clockConfig[clkId].divisor * abs(ticks - round(ticks));	// Error comparison needs scaling
 		if (error < bestError)
 		{
 			bestClock = clkId;
