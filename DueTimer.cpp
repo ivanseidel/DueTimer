@@ -155,7 +155,7 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 	float error;
 	int clkId = 3;
 	int bestClock = 3;
-	float bestError = 1.0;
+	float bestError = 9.999e99;
 	do
 	{
 		ticks = (float) VARIANT_MCK / frequency / (float) clockConfig[clkId].divisor;
