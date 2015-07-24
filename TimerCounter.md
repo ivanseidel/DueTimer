@@ -91,9 +91,16 @@ TIOB8     |     PD  8    |   Digital Pin 12
 The *clock of the counters* can be set very flexibly to internal or external signals. To *use the channel as a timer*, it makes sense to connect its clock input to an internal timer clock. Here are the options:
 
 Name         | Definition
--------------|-----------TIMER_CLOCK1 | `MCK /   2`TIMER_CLOCK2 | `MCK /   8`TIMER_CLOCK3 | `MCK /  32`TIMER_CLOCK4 | `MCK / 128`TIMER_CLOCK5 | `SLCK`
-Where `MCK` is the master clock (84 MHz for the Arduino Due) and SLCK is the slow clock (which can be clocked at 32.768 kHz by Y2 on the Arduino Due).
+-------------|-----------
+TIMER_CLOCK1 | `MCK /   2`
+TIMER_CLOCK2 | `MCK /   8`
+TIMER_CLOCK3 | `MCK /  32`
+TIMER_CLOCK4 | `MCK / 128`
+TIMER_CLOCK5 | `SLCK`
 
-[Atmel SAM3X Datasheet]: http://www.atmel.com/images/doc11057s.pdf
+
+Where `MCK` is the master clock (84 MHz for the Arduino Due) and SLCK is the slow clock (which can be clocked at 32.768 kHz by Y2 on the Arduino Due).
+
+[Atmel SAM3X Datasheet]: http://www.atmel.com/Images/Atmel-11057-32-bit-Cortex-M3-Microcontroller-SAM3X-SAM3A_Datasheet.pdf
 [Arduino Due's SAM3X Pin Mapping]: http://arduino.cc/en/Hacking/PinMappingSAM3X
 [Arduino Due pinout diagram]: http://www.robgray.com/temp/Due-pinout.pdf
