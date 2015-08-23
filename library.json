@@ -1,0 +1,12 @@
+{
+    "name": "DueTimer",
+    "keywords": "timer",
+    "description": "Timer Library fully implemented for Arduino DUE",
+    "repository":
+    {
+        "type": "git",
+        "url": "https://github.com/ivanseidel/DueTimer.git"
+    },
+    "frameworks": "arduino",
+    "platforms": "atmelsam"
+}
