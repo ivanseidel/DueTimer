@@ -8,6 +8,7 @@
   Released into the public domain.
 */
 
+#if defined(_SAM3XA_)
 #include "DueTimer.h"
 
 const DueTimer::Timer DueTimer::Timers[NUM_TIMERS] = {
@@ -303,3 +304,4 @@ void TC8_Handler(void){
 	TC_GetStatus(TC2, 2);
 	DueTimer::callbacks[8]();
 }
+#endif

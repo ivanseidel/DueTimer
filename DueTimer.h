@@ -7,13 +7,13 @@
   Released into the public domain.
 */
 
-#ifdef __arm__
 
 #ifndef DueTimer_h
 #define DueTimer_h
 
 #include "Arduino.h"
 
+#if defined(_SAM3XA_)
 #include <inttypes.h>
 
 /*
@@ -102,8 +102,8 @@ extern DueTimer Timer6;
 extern DueTimer Timer7;
 extern DueTimer Timer8;
 
+// _SAM3XA_
 #endif
 
-#else
-	#error Oops! Trying to include DueTimer on another device?
+// DueTimer_h
 #endif
