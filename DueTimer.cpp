@@ -9,6 +9,7 @@
 */
 
 #if defined(_SAM3XA_)
+#include <Arduino.h>
 #include "DueTimer.h"
 
 const DueTimer::Timer DueTimer::Timers[NUM_TIMERS] = {
