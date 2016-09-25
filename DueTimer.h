@@ -43,6 +43,7 @@ protected:
 	// Stores the object timer frequency
 	// (allows to access current timer period and frequency):
 	static double _frequency[NUM_TIMERS];
+	static uint32_t _priority[NUM_TIMERS];
 
 	// Picks the best clock to lower the error
 	static uint8_t bestClock(double frequency, uint32_t& retRC);
@@ -81,9 +82,11 @@ public:
 	DueTimer& stop(void);
 	DueTimer& setFrequency(double frequency);
 	DueTimer& setPeriod(unsigned long microseconds);
+	DueTimer& setPriority(uint32_t priority);
 
 	double getFrequency(void) const;
 	long getPeriod(void) const;
+	uint32_t getPriority(void) const;
 };
 
 // Just to call Timer.getAvailable instead of Timer::getAvailable() :
