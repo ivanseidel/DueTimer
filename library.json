@@ -2,11 +2,26 @@
     "name": "DueTimer",
     "keywords": "timer",
     "description": "Timer Library fully implemented for Arduino DUE",
+    "authors":
+    [
+        {
+            "name": "Ivan Seidel",
+            "email": "ivanseidel@gmail.com",
+            "url": "https://github.com/ivanseidel",
+            "maintainer": true
+        }
+    ],
     "repository":
     {
         "type": "git",
         "url": "https://github.com/ivanseidel/DueTimer.git"
     },
+    "version": "1.4.7",
+    "license": "MIT",
     "frameworks": "arduino",
-    "platforms": "atmelsam"
+    "platforms": "atmelsam",
+    "examples":
+    [
+        "examples/*/*.pde"
+    ]
 }
