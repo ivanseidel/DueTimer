@@ -8,8 +8,6 @@
   Released into the public domain.
 */
 
-#include <Arduino.h>
-#if defined(_SAM3XA_)
 #include "DueTimer.h"
 
 const DueTimer::Timer DueTimer::Timers[NUM_TIMERS] = {
@@ -19,9 +17,11 @@ const DueTimer::Timer DueTimer::Timers[NUM_TIMERS] = {
 	{TC1,0,TC3_IRQn},
 	{TC1,1,TC4_IRQn},
 	{TC1,2,TC5_IRQn},
+#if NUM_TIMERS > 6
 	{TC2,0,TC6_IRQn},
 	{TC2,1,TC7_IRQn},
 	{TC2,2,TC8_IRQn},
+#endif
 };
 
 // Fix for compatibility with Servo library
@@ -34,14 +34,21 @@ const DueTimer::Timer DueTimer::Timers[NUM_TIMERS] = {
 		(void (*)()) 1, // Timer 3 - Occupied
 		(void (*)()) 1, // Timer 4 - Occupied
 		(void (*)()) 1, // Timer 5 - Occupied
+#if NUM_TIMERS > 6
 		(void (*)()) 0, // Timer 6
 		(void (*)()) 0, // Timer 7
 		(void (*)()) 0  // Timer 8
+#endif
 	};
 #else
 	void (*DueTimer::callbacks[NUM_TIMERS])() = {};
 #endif
-double DueTimer::_frequency[NUM_TIMERS] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+double DueTimer::_frequency[NUM_TIMERS] = {
+  -1,-1,-1,-1,-1,-1,
+#if NUM_TIMERS > 6
+  -1,-1,-1
+#endif
+  };
 
 /*
 	Initializing all timers, so you can use them like this: Timer0.start();
@@ -57,9 +64,11 @@ DueTimer Timer1(1);
 	DueTimer Timer4(4);
 	DueTimer Timer5(5);
 #endif
+#if NUM_TIMERS > 6
 DueTimer Timer6(6);
 DueTimer Timer7(7);
 DueTimer Timer8(8);
+#endif
 
 DueTimer::DueTimer(unsigned short _timer) : timer(_timer){
 	/*
@@ -160,7 +169,7 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 	float bestError = 9.999e99;
 	do
 	{
-		ticks = (float) VARIANT_MCK / frequency / (float) clockConfig[clkId].divisor;
+		ticks = (float) SystemCoreClock / frequency / (float) clockConfig[clkId].divisor;
 		// error = abs(ticks - round(ticks));
 		error = clockConfig[clkId].divisor * abs(ticks - round(ticks));	// Error comparison needs scaling
 		if (error < bestError)
@@ -169,7 +178,7 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 			bestError = error;
 		}
 	} while (clkId-- > 0);
-	ticks = (float) VARIANT_MCK / frequency / (float) clockConfig[bestClock].divisor;
+	ticks = (float) SystemCoreClock / frequency / (float) clockConfig[bestClock].divisor;
 	retRC = (uint32_t) round(ticks);
 	return clockConfig[bestClock].flag;
 }
@@ -204,16 +213,16 @@ DueTimer& DueTimer::setFrequency(double frequency){
 
 	switch (clock) {
 	  case TC_CMR_TCCLKS_TIMER_CLOCK1:
-	    _frequency[timer] = (double)VARIANT_MCK / 2.0 / (double)rc;
+	    _frequency[timer] = (double)SystemCoreClock / 2.0 / (double)rc;
 	    break;
 	  case TC_CMR_TCCLKS_TIMER_CLOCK2:
-	    _frequency[timer] = (double)VARIANT_MCK / 8.0 / (double)rc;
+	    _frequency[timer] = (double)SystemCoreClock / 8.0 / (double)rc;
 	    break;
 	  case TC_CMR_TCCLKS_TIMER_CLOCK3:
-	    _frequency[timer] = (double)VARIANT_MCK / 32.0 / (double)rc;
+	    _frequency[timer] = (double)SystemCoreClock / 32.0 / (double)rc;
 	    break;
 	  default: // TC_CMR_TCCLKS_TIMER_CLOCK4
-	    _frequency[timer] = (double)VARIANT_MCK / 128.0 / (double)rc;
+	    _frequency[timer] = (double)SystemCoreClock / 128.0 / (double)rc;
 	    break;
 	}
 
@@ -293,6 +302,7 @@ void TC5_Handler(void){
 	DueTimer::callbacks[5]();
 }
 #endif
+#if NUM_TIMERS > 6
 void TC6_Handler(void){
 	TC_GetStatus(TC2, 0);
 	DueTimer::callbacks[6]();
