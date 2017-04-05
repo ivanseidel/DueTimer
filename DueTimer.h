@@ -77,13 +77,13 @@ public:
 	DueTimer(unsigned short _timer);
 	DueTimer& attachInterrupt(void (*isr)());
 	DueTimer& detachInterrupt(void);
-	DueTimer& start(long microseconds = -1);
+	DueTimer& start(double microseconds = -1);
 	DueTimer& stop(void);
 	DueTimer& setFrequency(double frequency);
-	DueTimer& setPeriod(unsigned long microseconds);
+	DueTimer& setPeriod(double microseconds);
 
 	double getFrequency(void) const;
-	long getPeriod(void) const;
+	double getPeriod(void) const;
 };
 
 // Just to call Timer.getAvailable instead of Timer::getAvailable() :
