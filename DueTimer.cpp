@@ -102,7 +102,7 @@ DueTimer& DueTimer::detachInterrupt(void){
 	return *this;
 }
 
-DueTimer& DueTimer::start(long microseconds){
+DueTimer& DueTimer::start(double microseconds){
 	/*
 		Start the timer
 		If a period is set, then sets the period and start the timer
@@ -231,7 +231,7 @@ DueTimer& DueTimer::setFrequency(double frequency){
 	return *this;
 }
 
-DueTimer& DueTimer::setPeriod(unsigned long microseconds){
+DueTimer& DueTimer::setPeriod(double microseconds){
 	/*
 		Set the period of the timer (in microseconds)
 	*/
@@ -250,7 +250,7 @@ double DueTimer::getFrequency(void) const {
 	return _frequency[timer];
 }
 
-long DueTimer::getPeriod(void) const {
+double DueTimer::getPeriod(void) const {
 	/*
 		Get current time period
 	*/
