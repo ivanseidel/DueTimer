@@ -7,12 +7,12 @@
   Released into the public domain.
 */
 
-#ifdef __arm__
+#include "Arduino.h"
+
+#if defined(_SAM3XA_)
 
 #ifndef DueTimer_h
 #define DueTimer_h
-
-#include "Arduino.h"
 
 #include <inttypes.h>
 

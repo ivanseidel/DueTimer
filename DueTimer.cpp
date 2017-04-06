@@ -43,12 +43,12 @@ const DueTimer::Timer DueTimer::Timers[NUM_TIMERS] = {
 #else
 	void (*DueTimer::callbacks[NUM_TIMERS])() = {};
 #endif
-double DueTimer::_frequency[NUM_TIMERS] = {
-  -1,-1,-1,-1,-1,-1,
+		
 #if NUM_TIMERS > 6
-  -1,-1,-1
+double DueTimer::_frequency[NUM_TIMERS] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+#else
+double DueTimer::_frequency[NUM_TIMERS] = {-1,-1,-1,-1,-1,-1};
 #endif
-  };
 
 /*
 	Initializing all timers, so you can use them like this: Timer0.start();
