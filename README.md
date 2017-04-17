@@ -70,6 +70,49 @@ DueTimer::getAvailable().attachInterrupt(callback2).start(10);
 // And so on...
 ```
 
+### Activate the output pins (TIOA,TIOB)
+Timer1.attachInterrupt(timerISR).setFrequency(1000).enablePinB().start();
+Timer1.attachInterrupt(timerISR).setFrequency(1000).enablePinA().start();
+
+### Set the duty cycle
+Timer1.attachInterrupt(timerISR).setPeriodMilliSeconds(10).setTimeOnBMilliSeconds(1).enablePinB().start();
+Timer1.attachInterrupt(timerISR).setFrequency(1000).setDutyCycleA(25).enablePinA().start();
+
+### Capture mode :
+### Capture the period and duty cycle (time on) of the TIO input signal
+### Note : capture mode automatically enable the TIOA pin which is the capture pin
+
+void timerCapture() {
+
+  capture++;
+
+  uint32_t status = Timer8.statusRegister();
+
+  if (status & TC_SR_LDRAS) {
+    captureTimeOn = Timer8.captureValueA();
+    captureChange++;
+  } else
+  if (status & TC_SR_LDRBS) {
+    capturePeriod = Timer8.captureValueB();
+    captureChange++;
+    Timer8.resetCounterValue();
+  } else 
+  if ((status & TC_SR_CPCS)||(status & TC_SR_COVFS)) {
+    // Overflow trigger
+    capturePeriod = 0;
+    captureTimeOn = 0;
+    captureOverRun++;
+  };
+}
+Timer8.attachInterrupt(timerCapture).setCaptureMilliSeconds(100).start();
+  
+### Counter mode
+### Count rising edge of selected timer input clock
+### Note : Counter mode enable the TCLK pin
+
+Timer3.setCounter().start();
+
+
 ### Compatibility with Servo.h
 
 Because Servo Library uses the same callbacks of DueTimer, we provides a custom solution for working with both of them. However, Timers 0,2,3,4 and 5 will not Work anymore.

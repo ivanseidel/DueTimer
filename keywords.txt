@@ -8,6 +8,9 @@ setFrequency	KEYWORD2
 getFrequency	KEYWORD2
 getPeriod	KEYWORD2
 
+setCapture	KEYWORD2
+
+
 Timer	KEYWORD1
 Timer0	KEYWORD1
 Timer1	KEYWORD1
@@ -17,4 +20,5 @@ Timer4	KEYWORD1
 Timer5	KEYWORD1
 Timer6	KEYWORD1
 Timer7	KEYWORD1
+Timer8	KEYWORD1
 
