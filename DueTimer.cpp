@@ -122,9 +122,10 @@ DueTimer& DueTimer::start(double microseconds){
 	
 	if(_frequency[timer] <= 0)
 		setFrequency(1);
-
+	
 	NVIC_ClearPendingIRQ(Timers[timer].irq);
 	NVIC_EnableIRQ(Timers[timer].irq);
+	NVIC_SetPriority(Timers[timer].irq, _priority[timer]);
 	
 	TC_Start(Timers[timer].tc, Timers[timer].channel);
 
@@ -249,6 +250,25 @@ DueTimer& DueTimer::setPeriod(double microseconds){
 	double frequency = 1000000.0 / microseconds;	
 	setFrequency(frequency);
 	return *this;
+}
+
+DueTimer& DueTimer::setPriority(uint32_t priority){
+	/*
+		Set the priority of the timer (0 is the highest priority and 128 is the lowest priority)
+	*/
+	// Set priority is range
+	if(priority < 0 || priority > 128) { priority = 128; }
+	_priority[timer] = priority;
+	//NVIC_SetPriority(Timers[timer].irq, priority);
+	return *this;
+}
+
+uint32_t DueTimer::getPriority(void){
+	/*
+		Get current priority of the timer
+	*/
+	//return NVIC_GetPriority(Timers[timer].irq);
+	return _priority[timer];
 }
 
 double DueTimer::getFrequency(void) const {
