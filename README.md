@@ -68,6 +68,12 @@ Timer.getAvailable().attachInterrupt(callback1).start(10);
 DueTimer::getAvailable().attachInterrupt(callback2).start(10);
 // Start timer on second available timer
 // And so on...
+
+DueTimer myTimer = Timer.getAvailable();
+if (myTimer != DueTimer(0))
+// Now we know that the timer returned is actually available
+// Can compare timers using == or !=
+
 ```
 
 ### Compatibility with Servo.h
@@ -104,7 +110,8 @@ You will need uncommend the line in `DueTimer.h` in `DueTimer` folder inside the
 
 ### You don't need to know:
 
-- `unsigned short timer` - Stores the object timer id (to access Timers struct array).
+<<<<<<< HEAD
+- `int timer` - Stores the object timer id (to access Timers struct array).
 
 - `DueTimer(unsigned short _timer)` - Instantiate a new DueTimer object for Timer _timer (NOTE: All objects are already instantiated!).
 
