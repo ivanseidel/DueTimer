@@ -7,12 +7,12 @@
   Released into the public domain.
 */
 
-#ifdef __arm__
+#include "Arduino.h"
+
+#if defined(_SAM3XA_)
 
 #ifndef DueTimer_h
 #define DueTimer_h
-
-#include "Arduino.h"
 
 #include <inttypes.h>
 
@@ -31,7 +31,11 @@
 #endif
 
 
+#if defined TC2
 #define NUM_TIMERS  9
+#else
+#define NUM_TIMERS  6
+#endif
 
 class DueTimer
 {
@@ -54,9 +58,11 @@ protected:
   friend void TC3_Handler(void);
   friend void TC4_Handler(void);
   friend void TC5_Handler(void);
+#if NUM_TIMERS > 6
   friend void TC6_Handler(void);
   friend void TC7_Handler(void);
   friend void TC8_Handler(void);
+#endif
 
 	static void (*callbacks[NUM_TIMERS])();
 
@@ -98,9 +104,11 @@ extern DueTimer Timer1;
 	extern DueTimer Timer4;
 	extern DueTimer Timer5;
 #endif
+#if NUM_TIMERS > 6
 extern DueTimer Timer6;
 extern DueTimer Timer7;
 extern DueTimer Timer8;
+#endif
 
 #endif
 
