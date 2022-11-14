@@ -44,6 +44,8 @@ protected:
 	// Represents the timer id (index for the array of Timer structs)
 	const unsigned short timer;
 
+	int _running = 0;
+
 	// Stores the object timer frequency
 	// (allows to access current timer period and frequency):
 	static double _frequency[NUM_TIMERS];
