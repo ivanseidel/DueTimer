@@ -127,6 +127,8 @@ DueTimer& DueTimer::start(double microseconds){
 	NVIC_EnableIRQ(Timers[timer].irq);
 	
 	TC_Start(Timers[timer].tc, Timers[timer].channel);
+	
+	_running = 1;
 
 	return *this;
 }
@@ -139,6 +141,8 @@ DueTimer& DueTimer::stop(void){
 	NVIC_DisableIRQ(Timers[timer].irq);
 	
 	TC_Stop(Timers[timer].tc, Timers[timer].channel);
+	
+	_running = 0;
 
 	return *this;
 }
@@ -236,6 +240,9 @@ DueTimer& DueTimer::setFrequency(double frequency){
 	t.tc->TC_CHANNEL[t.channel].TC_IER=TC_IER_CPCS;
 	// ... and disable all others.
 	t.tc->TC_CHANNEL[t.channel].TC_IDR=~TC_IER_CPCS;
+
+	if (_running)
+		start();
 
 	return *this;
 }
