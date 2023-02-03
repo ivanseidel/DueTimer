@@ -110,7 +110,7 @@ You will need uncommend the line in `DueTimer.h` in `DueTimer` folder inside the
 
 ### You don't need to know:
 
-<<<<<<< HEAD
+
 - `int timer` - Stores the object timer id (to access Timers struct array).
 
 - `DueTimer(unsigned short _timer)` - Instantiate a new DueTimer object for Timer _timer (NOTE: All objects are already instantiated!).
